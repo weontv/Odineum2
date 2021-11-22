@@ -1,0 +1,30 @@
+@import "../../App.scss";
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  font-size: 37px;
+  color: #ffc737;
+  background-color: #1d1c1b;
+  background-image: url("../../assets/nav_underbar.png");
+  background-repeat: repeat-x;
+  background-position: bottom;
+  padding-bottom: 20px;
+  height: 170px;
+  .logo {
+    cursor: pointer;
+    width: 130px;
+    height: auto;
+  }
+  ul {
+    max-width: 1500px;
+    width: 80%;
+    list-style-type: none;
+    display: flex;
+    justify-content: space-around;
+    li {
+      cursor: pointer;
+      margin-left: 10px;
+    }
+  }
+}
