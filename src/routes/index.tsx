@@ -1,15 +1,17 @@
 import React from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "../pages/landing";
+import Header from "../components/header";
 
-function Routes() {
+function Router() {
   return (
-    <>
-      <BrowserRouter>
-        <Route exact path="/" component={Landing} />
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path="/">{Landing}</Route>
+      </Routes>
+    </BrowserRouter>
   );
 };
 
-export default Routes;
+export default Router;
