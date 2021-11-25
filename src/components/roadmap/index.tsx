@@ -27,7 +27,7 @@ function RoadMap() {
           iconStyle={{ background: '#131313', color: '#fff', boxShadow: '0 0 0 4px #ffc737', left: '10px', width: '20px', height: '20px', borderRadius: '10px', top: '65px' }}
         >
           <div className={styles.roadmapItem}>
-            <img src="img/roadmapicon1.png" alt="icon" />
+            <img src="img/roadmapicon2.png" alt="icon" />
             <div>Once the whitelist investors are determined, the token itself will be launched
               After launch, the initial push will be to streamline as many marketting opportunities as possible
               and this is also when the rest of the projects utility will begin to be built.</div>
@@ -38,7 +38,7 @@ function RoadMap() {
           iconStyle={{ background: '#131313', color: '#fff', boxShadow: '0 0 0 4px #ffc737', left: '10px', width: '20px', height: '20px', borderRadius: '10px', top: '65px' }}
         >
           <div className={styles.roadmapItem}>
-            <img src="img/roadmapicon1.png" alt="icon" />
+            <img src="img/roadmapicon3.png" alt="icon" />
             <div>Odineums utility will be released in waves, starting with one project, then moving on to the next
               eventually having an entire platform that covers a wide range of use cases
               and services in the crypto sphere</div>
@@ -49,7 +49,7 @@ function RoadMap() {
           iconStyle={{ background: '#131313', color: '#fff', boxShadow: '0 0 0 4px #ffc737', left: '10px', width: '20px', height: '20px', borderRadius: '10px', top: '65px' }}
         >
           <div className={styles.roadmapItem}>
-            <img src="img/roadmapicon1.png" alt="icon" />
+            <img src="img/roadmapicon4.png" alt="icon" />
             <div>Once the platform is established Odineum will start to build out the gaming component of the project
               The game will be a Play-to-earn game with competitive/pvp components
               stay tuned for further announcements </div>

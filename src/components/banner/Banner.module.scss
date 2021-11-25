@@ -87,7 +87,23 @@
   left: 50%;
   transform: translate(-50%, -50%);
   min-width: 300px;
+  cursor: pointer;
+  &:hover {
+    animation: vibrate 2s linear infinite;
+  }
   @media (max-width: 840px) {
     min-width: 250px;
+  }
+}
+
+@keyframes vibrate {
+  0% {
+    top: 50%;
+  }
+  50% {
+    top: 45%;
+  }
+  100% {
+    top: 50%;
   }
 }
