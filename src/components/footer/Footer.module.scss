@@ -16,6 +16,7 @@
       min-width: 400px;
     }
     @media (max-width: 830px) {
+      min-width: 300px;
       flex-direction: column;
     }
   }
