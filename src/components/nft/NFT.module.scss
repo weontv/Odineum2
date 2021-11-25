@@ -62,6 +62,12 @@
 }
 
 .hover {
+  img {
+    transition: 0.3s;
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
   &:hover {
     position: relative;
     cursor: pointer;
@@ -78,7 +84,7 @@
       height: 50px;
       animation: vibrate 1.5s linear infinite;
       @media (max-width: 992px) {
-        left: 44%;        
+        left: 44%;
       }
     }
   }
