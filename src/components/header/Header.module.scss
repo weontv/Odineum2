@@ -91,7 +91,14 @@
       div {
         margin-left: 10px;
         margin-right: 10px;
+        width: 50px;
+        @media (max-width: 1024px) {
+          width: 25px;
+        }
       }
+    }
+    @media (max-width: 1024px) {
+      width: 165px;
     }
   }
   .menu {
