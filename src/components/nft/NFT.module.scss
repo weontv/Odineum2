@@ -1,0 +1,97 @@
+@import "../../App.scss";
+
+.title {
+  font-family: "NexaBold";
+  font-size: 173px;
+  margin: 0;
+  padding: 0;
+  color: #ffc737;
+  text-align: left;
+  text-shadow: 3px 26px 10px black;
+  @media (max-width: 992px) {
+    font-size: 100px;
+  }
+}
+
+.base {
+  position: absolute;
+  bottom: -72px;
+  @media (max-width: 992px) {
+    bottom: -22px;
+    width: 250px;
+  }
+}
+
+.nfts {
+  background-image: url("../../assets/rope_bg.png");
+  background-position: 0% 70%;
+  background-repeat: repeat-x;
+  @media (max-width: 992px) {
+    background-image: none;
+  }
+}
+
+.items {
+  position: relative;
+  & > img {
+    margin-top: -100px;
+    @media (max-width: 1123px) {
+      margin-top: -70px;
+    }
+    @media (max-width: 992px) {
+      display: none;
+    }
+  }
+  & > div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 65%;
+    @media (max-width: 992px) {
+      margin-top: 50px;
+      flex-wrap: wrap;
+      width: auto;
+      transform: none;
+      position: static;
+    }
+    & > div {
+      max-width: 300px;
+    }
+  }
+}
+
+.hover {
+  &:hover {
+    position: relative;
+    cursor: pointer;
+    &::before {
+      content: "";
+      left: 38%;
+      bottom: 100%;
+      position: absolute;
+      background-image: url("../../assets/triangle.png");
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: 50px;
+      height: 50px;
+      animation: vibrate 1.5s linear infinite;
+      @media (max-width: 992px) {
+        left: 44%;        
+      }
+    }
+  }
+}
+
+@keyframes vibrate {
+  0% {
+    bottom: 100%;
+  }
+  50% {
+    bottom: 96%;
+  }
+  100% {
+    bottom: 100%;
+  }
+}
