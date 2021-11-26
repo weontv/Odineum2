@@ -41,6 +41,9 @@
     @media (max-width: 992px) {
       display: none;
     }
+    @media (min-width: 1920px) {
+      width: 100%;
+    }
   }
   & > div {
     position: absolute;
