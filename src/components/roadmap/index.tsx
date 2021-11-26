@@ -6,7 +6,7 @@ import styles from "./RoadMap.module.scss";
 function RoadMap() {
   return (
     <>
-      <div className="flex justify-center relative">
+      <div className="flex justify-center relative" id="roadmap">
         <p className={styles.title}>ROADMAP</p>
         <img src="img/roadmap_style (2).png" alt="base" className={styles.base} />
       </div>

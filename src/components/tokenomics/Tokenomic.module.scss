@@ -11,11 +11,11 @@
   @media (max-width: 992px) {
     font-size: 100px;
   }
-  @media (max-width: 600px) {
+  @media (max-width: 718px) {
     font-size: 55px;
   }
   @media (max-width: 400px) {
-    font-size: 45px;    
+    font-size: 45px;
   }
 }
 
@@ -41,7 +41,7 @@
     text-align: center;
     filter: drop-shadow(0px 11px 3px rgba(0, 0, 0, 0.39));
     @media (max-width: 600px) {
-      font-size: 32px;      
+      font-size: 32px;
     }
   }
   p {
@@ -62,6 +62,60 @@
       width: 100%;
     }
   }
+  .steps {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: url(../../assets/steps.png);
+    background-position: center;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    max-width: 625px;
+    width: 100%;
+    height: 420px;
+    transition: background-size 0.3s;
+    @media (max-width: 590px) {
+      background-size: 200% 100%;
+    }
+    h1 {
+      font-size: 22px;
+      line-height: 5px;
+      color: #ffffff;
+      font-weight: 800;
+      font-family: "GothamBlack";
+      text-align: center;
+      filter: drop-shadow(0px 9px 6.5px rgba(0, 0, 0, 0.43));
+    }
+    h2 {
+      font-size: 26px;
+      color: #ffffff;
+      line-height: 27px;
+      margin-top: 15px;
+      font-family: "BebasNeue";
+      text-align: center;
+      filter: drop-shadow(0px 9px 6.5px rgba(0, 0, 0, 0.43));
+    }
+    h5 {
+      font-size: 19px;
+      color: #ffffff;
+      line-height: 18px;
+      margin-top: 0px;
+      font-family: "BebasNeue";
+      text-align: center;
+      filter: drop-shadow(0px 9px 6.5px rgba(0, 0, 0, 0.43));
+    }
+    h6 {
+      font-size: 15px;
+      color: #ffffff;
+      line-height: 20px;
+      margin-top: 6px;
+      margin-bottom: 9px;
+      font-family: "GothamBlack";
+      text-align: left;
+      filter: drop-shadow(0px 9px 6.5px rgba(0, 0, 0, 0.43));
+    }
+  }
   .stages {
     display: flex;
     flex-direction: column;
@@ -74,7 +128,7 @@
     }
   }
   @media (max-width: 992px) {
-    padding-left: 20px;    
+    padding-left: 20px;
     padding-right: 20px;
   }
 }

@@ -12,19 +12,19 @@ function Header() {
         <div className={`${styles.menu}  ${isHamburger && styles.active}`}>
           <ul>
             <li>
-              <Link to="#nft">NFT</Link>
+              <a href="#nft">NFT</a>
             </li>
             <li>
-              <Link to="#roadmap" className="flex items-center">ROADMAP <img src="img/navdropdown.png" alt="drop" className="ml-4" /></Link>
+              <a href="#roadmap" className="flex items-center">ROADMAP <img src="img/navdropdown.png" alt="drop" className="ml-4" /></a>
             </li>
             <li>
-              <Link to="#roadmap" className="flex items-center">TOKENOMICS</Link>
+              <a href="#roadmap" className="flex items-center">TOKENOMICS</a>
             </li>
             <li>
-              <Link to="#chart" className="flex items-center">CHART</Link>
+              <a href="#chart" className="flex items-center">CHART</a>
             </li>
             <li>
-              <Link to="/whitepaper" className="flex items-center">WHITEPAPER</Link>
+              <a href="#chart" className="flex items-center">WHITEPAPER</a>
             </li>
           </ul>
         </div>
