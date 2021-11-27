@@ -18,7 +18,7 @@ function Header() {
               <a href="#roadmap" className="flex items-center">ROADMAP <img src="img/navdropdown.png" alt="drop" className="ml-4" /></a>
             </li>
             <li>
-              <a href="#roadmap" className="flex items-center">TOKENOMICS</a>
+              <a href="#tokenomic" className="flex items-center">TOKENOMICS</a>
             </li>
             <li>
               <a href="#chart" className="flex items-center">CHART</a>
@@ -43,9 +43,9 @@ function Header() {
                 </Link>
               </div>
               <div>
-                <Link to="/">
+                <a href="https://t.me/Odineum">
                   <IconTelegram color='white' />
-                </Link>
+                </a>
               </div>
             </div>
           </div>
