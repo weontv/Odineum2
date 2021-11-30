@@ -33,9 +33,9 @@ function Header() {
             <img src="img/socialbg.png" alt="social" />
             <div className={styles.socialitems}>
               <div>
-                <Link to="/">
+                <a href="https://twitter.com/OdineumOfficial">
                   <IconTwitter color='white' />
-                </Link>
+                </a>
               </div>
               <div>
                 <Link to="/">
