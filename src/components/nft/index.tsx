@@ -1,32 +1,17 @@
 import React from "react";
-import styles from "./NFT.module.scss";
+import styles from "./NftItem.module.scss";
 
-function Nft() {
-  return (
-    <div className={styles.nfts}>
-      <div className="flex justify-center relative" id="nft">
-        <p className={styles.title}>NFT</p>
-        <img src="img/nft_underbase.png" alt="base" className={styles.base} />
-      </div>
-      <div className={styles.items}>
-        <img src="img/book_bg.png" alt="background" />
-        <div className="flex justify-around">
-          <div className={styles.hover}>
-            <img src="img/nft_2.png" alt="nft4" />
-          </div>
-          <div className={styles.hover}>
-            <img src="img/nft_3.png" alt="nft3" />
-          </div>
-          <div className={styles.hover}>
-            <img src="img/nft_4.png" alt="nft2" />
-          </div>
-          <div className={styles.hover}>
-            <img src="img/nft_1.png" alt="nft3" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+declare type NftProps = {
+  imageUrl: string,
+  title: string,
+  price: number
+}
+const Nft = ({ imageUrl, title, price }: NftProps) => (
+  <div className={`flex flex-col justify-center items-center ${styles.container}`}>
+    <div className={styles.nft} style={{ backgroundImage: `url(${imageUrl})` }} />
+    <h5>{title}</h5>
+    <h6>{price}<span>BNB</span></h6>
+  </div>
+);
 
 export default Nft;
