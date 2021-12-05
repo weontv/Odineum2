@@ -14,8 +14,8 @@
   &::after {
     position: absolute;
     content: "";
-    background-color: rgb(29, 27, 28);
-    opacity: 0.5;
+    background-color: #202224;
+    opacity: 0.8;
     top: 0;
     left: 0;
     bottom: 0;
@@ -39,7 +39,7 @@
     z-index: 1;
     span {
       color: #1d1d1f;
-      text-shadow: 0 0px 2px white;
+      text-shadow: 1px 1px 0px white, -1px -1px 0px white, -1px 1px 0 white, 1px -1px 0 white;
     }
     @media (max-width: 1355px) {
       font-size: 36px;
@@ -87,6 +87,12 @@
     @media (max-width: 1024px) {
       display: block;
     }
+    @media (max-width: 553px) {
+      span {
+        width: 30px;
+        height: 5px;
+      }
+    }
   }
   .walletBtn {
     position: relative;
@@ -106,6 +112,9 @@
       margin-right: 10px;
       font-size: 19px;
       padding: 10px 20px;
+    }
+    @media (max-width: 553px) {
+      font-size: 10px;
     }
     &::before {
       content: "";
