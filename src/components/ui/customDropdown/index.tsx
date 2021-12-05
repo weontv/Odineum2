@@ -5,20 +5,22 @@ declare type PageProps = {
   selected: string;
   // eslint-disable-next-line react/require-default-props
   classProps?: string;
+  // eslint-disable-next-line react/require-default-props
+  forNftList?: boolean | undefined;
   lists: string[];
   handleSelect: (item: string) => void;
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export const CustomDropdown = ({
+const CustomDropdown = ({
   selected,
   classProps,
+  forNftList = false,
   lists,
   handleSelect,
 }: PageProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const headerRef = useRef<HTMLDivElement>(null);
-  
+
   const handleClickOutside = (event: any) => {
     if (headerRef.current && !headerRef.current.contains(event.target)) {
       if (isOpen) setIsOpen(false);
@@ -34,32 +36,32 @@ export const CustomDropdown = ({
 
   return (
     <div
-      className={`relative ${classProps} flex justify-ccenter items-center text-md z-10 `}
+      className={`relative ${classProps} flex justify-ccenter items-center text-sm z-10 ${styles.maxWidth}`}
     >
       <button
         type="button"
         id="menu-button"
-        className={`flex justify-around items-center ${styles.button}`}
+        className={`flex justify-around items-center ${forNftList ? styles.list : styles.button}`}
         onClick={() => {
           setIsOpen(!isOpen);
         }}
       >
-        <div>{selected}</div>
+        <div className="text-white">{selected}</div>
         <div>
-          <img src="img/dropdown.png" alt="arrowdown" />
+          {forNftList ? <img src="img/arrow down.png" alt="arrowdown" /> : <img src="img/dropdown.png" alt="arrowdown" />}
         </div>
       </button>
 
       {isOpen && (
         <div
-          className={styles.dropdown}
+          className={forNftList ? styles.dropdown1 : styles.dropdown}
           role="menu"
           ref={headerRef}
           aria-orientation="vertical"
           aria-labelledby="menu-button"
           tabIndex={-1}
         >
-          <div className="py-1" role="none">
+          <div className="py-1 text-white" role="none">
             {lists &&
               lists.map((list: string, index: number) => (
                 // eslint-disable-next-line jsx-a11y/anchor-is-valid
@@ -86,3 +88,5 @@ export const CustomDropdown = ({
     </div>
   );
 };
+
+export default CustomDropdown;

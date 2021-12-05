@@ -1,6 +1,16 @@
 .app {
   text-align: center;
+}
+
+.landing-bg {
   background-image: url("./assets/odineum_bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.nft-bg {
+  background-image: url("./assets/nft_page.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;

@@ -24,6 +24,13 @@
   }
 }
 
+.list {
+  max-width: 350px;
+  width: 100%;
+  font-size: 32px;
+  font-family: "NexaBook";
+}
+
 .dropdown {
   position: absolute;
   background-color: #414141;
@@ -32,6 +39,20 @@
   font-family: NexaBook;
   font-size: 19px;
   width: 130px;
+  border-radius: 20px;
+  @media (max-width: 1470px) {
+    top: 40px;
+  }
+}
+
+.dropdown1 {
+  position: absolute;
+  background-color: #414141;
+  top: 50px;
+  right: 0;
+  font-family: NexaBook;
+  font-size: 19px;
+  width: 230px;
   border-radius: 20px;
   @media (max-width: 1470px) {
     top: 40px;
