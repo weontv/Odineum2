@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styles from "./NFT.module.scss";
 
 function Nft() {
@@ -11,18 +12,18 @@ function Nft() {
       <div className={styles.items}>
         <img src="img/book_bg.png" alt="background" />
         <div className="flex justify-around">
-          <div className={styles.hover}>
+          <Link to="/nft" className={styles.hover}>
             <img src="img/nft_2.png" alt="nft4" />
-          </div>
-          <div className={styles.hover}>
+          </Link>
+          <Link to="/nft" className={styles.hover}>
             <img src="img/nft_3.png" alt="nft3" />
-          </div>
-          <div className={styles.hover}>
+          </Link>
+          <Link to="/nft" className={styles.hover}>
             <img src="img/nft_4.png" alt="nft2" />
-          </div>
-          <div className={styles.hover}>
+          </Link>
+          <Link to="/nft" className={styles.hover}>
             <img src="img/nft_1.png" alt="nft3" />
-          </div>
+          </Link>
         </div>
       </div>
     </div>

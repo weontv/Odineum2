@@ -12,7 +12,7 @@ function Header() {
         <div className={`${styles.menu}  ${isHamburger && styles.active}`}>
           <ul>
             <li>
-              <a href="#nft">NFT</a>
+              <Link to="/nft">NFT</Link>
             </li>
             <li>
               <a href="#roadmap" className="flex items-center">ROADMAP <img src="img/navdropdown.png" alt="drop" className="ml-4" /></a>
