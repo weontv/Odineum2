@@ -16,7 +16,7 @@ function Mint(this: any) {
         <div className="flex mb-2 items-center justify-between">
           <div>
             <span className="text-2xl md:text-4xl inline-block py-1 px-2 uppercase rounded-full text-white">
-              Total <span className={styles.yellow}>Odineum</span>s Minted
+              Total Minted
             </span>
           </div>
           <div className="text-right">
