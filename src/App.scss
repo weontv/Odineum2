@@ -16,6 +16,16 @@
   background-position: center;
 }
 
+.mint-bg {
+  background-image: url("./assets/mint_page.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  @media (max-width: 700px) {
+    background-position: 43%;
+  }
+}
+
 .app-logo {
   height: 40vmin;
   pointer-events: none;
@@ -40,6 +50,86 @@
 
 .app-link {
   color: #61dafb;
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.horizontal-slider {
+  width: 100%;
+  max-width: 500px;
+  height: 50px;
+  margin: 60px 30px;
+  &::before {
+    content: "1";
+    position: absolute;
+    left: -30px;
+    color: white;
+    top: 15px;
+  }
+  &::after {
+    content: "10";
+    position: absolute;
+    right: -30px;
+    color: white;
+    top: 15px;
+  }
+  @media (max-width: 700px) {
+    max-width: 250px;
+    margin: 40px 20px;
+  }
+}
+
+.example-thumb {
+  position: relative;
+  font-family: NexaBold;
+  font-size: 30px;
+  outline: none;
+  text-align: center;
+  background-color: #fff;
+  color: white;
+  cursor: pointer;
+  box-sizing: border-box;
+  padding-top: 25px;
+  &::after {
+    position: absolute;
+    content: "";
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 53px;
+    height: 35px;
+    border-radius: 5px;
+    border: 1px solid white;
+    right: -14px;
+    top: 38px;
+  }
+}
+
+.example-thumb.active {
+  background-color: #fff;
+}
+
+.example-track {
+  position: relative;
+  background: #ffde00;
+}
+
+.example-track.example-track-1 {
+  background: #fff;
+}
+
+.horizontal-slider .example-track {
+  top: 25px;
+  height: 2px;
+}
+
+.horizontal-slider .example-thumb {
+  top: 13px;
+  width: 25px;
+  height: 25px;
+  line-height: 65px;
+  border-radius: 30px;
 }
 
 @keyframes app-logo-spin {
