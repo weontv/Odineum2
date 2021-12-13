@@ -13,12 +13,10 @@ function Mint(this: any) {
     <div className="mint-bg">
       <Header />
       <div className="py-48 flex flex-col justify-center items-center px-4">
-        <div className="flex mb-2 items-center justify-between">
-          <div>
-            <span className="text-2xl md:text-4xl inline-block py-1 px-2 uppercase rounded-full text-white">
-              Total Minted
-            </span>
-          </div>
+        <div className="flex mb-2 items-center justify-between w-full max-w-lg">
+          <span className="text-2xl md:text-4xl inline-block py-1 px-2 uppercase rounded-full text-white">
+            Total Minted
+          </span>
           <div className="text-right">
             <span className="text-2xl inline-block text-white whitespace-nowrap">
               100
