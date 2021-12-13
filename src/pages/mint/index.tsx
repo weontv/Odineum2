@@ -35,7 +35,7 @@ function Mint(this: any) {
           <button type="button" className={styles.mintBtn}>
             MINT
           </button>
-          <div id="mint" className="flex justify-start items-center my-16 text-sm md:text-2xl">
+          <div id="mint" className="flex justify-start items-center mt-16 text-sm md:text-2xl">
             <span className="flex text-white items-center bg-grey-lighter rounded rounded-r-none px-3">PRICE:</span>
             <input type="number"
               min={0.15}
