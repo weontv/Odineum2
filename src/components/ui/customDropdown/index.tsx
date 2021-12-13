@@ -36,7 +36,7 @@ const CustomDropdown = ({
 
   return (
     <div
-      className={`relative ${classProps} flex justify-ccenter items-center text-sm z-10 ${styles.maxWidth}`}
+      className={`relative ${classProps} flex justify-ccenter items-center text-sm z-10`}
     >
       <button
         type="button"
@@ -67,7 +67,7 @@ const CustomDropdown = ({
                 // eslint-disable-next-line jsx-a11y/anchor-is-valid
                 <a
                   href="#"
-                  className="font-dropdown block px-4 py-2"
+                  className={`font-dropdown block px-4 ${forNftList ? 'py-2' : 'py-4'}`}
                   role="menuitem"
                   tabIndex={-1}
                   id={`menu-item-${index}`}

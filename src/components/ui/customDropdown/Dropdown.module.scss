@@ -25,10 +25,14 @@
 }
 
 .list {
-  max-width: 350px;
-  width: 100%;
   font-size: 32px;
   font-family: "NexaBook";
+  white-space: nowrap;
+  div:last-child{
+    width: 25px;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
 }
 
 .dropdown {
@@ -41,7 +45,7 @@
   width: 130px;
   border-radius: 20px;
   @media (max-width: 1470px) {
-    top: 40px;
+    top: 65px;
   }
 }
 
