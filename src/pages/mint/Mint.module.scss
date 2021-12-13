@@ -1,0 +1,20 @@
+.mintBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: NexaBold;
+  font-size: 84px;
+  color: white;
+  text-shadow: 4px 6px 4.5px black;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding-left: 40px;
+  padding-right: 40px;
+  border-radius: 20px;
+  transition: transform 0.3s;
+  &:hover {
+    transform: translateY(-5px);
+  }
+  @media (max-width: 700px) {
+    font-size: 56px;
+  }
+}
