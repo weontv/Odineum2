@@ -1,0 +1,34 @@
+export const CHAIN_ID = 137
+export const NFT_ADDRESS = 0x1cbAF629aE46f07bcefBA7b49c2DFE1C0EC6f6dF
+export const NFT_MARKET_ADDRESS = 0x8fEa618D45E669681d601DAbbDC0Af12812D639D
+export const PROVIDER_URL = 'https://polygon-mainnet.g.alchemy.com/v2/9xzmqc-b30v1X5LiURSY8l1eMUsq5caB'
+// export const CHAIN_ID = 80001;
+export const CHAIN_ID_ERR_MSG = 'Please change your network to Polygon';
+export const METAMASK_INSTALL_ERR_MSG = 'Please check you installed Metamask';
+
+// export const infuraProvider = "https://polygon-mainnet.g.alchemy.com/v2/9xzmqc-b30v1X5LiURSY8l1eMUsq5caB";
+
+export const DefaultNetwork = Number(CHAIN_ID);
+
+
+export const supportedChainIds = [Number(CHAIN_ID)];
+
+export const networkInfo: any = {
+    137: {
+        label: 'Polygon',
+        rpcUrl: 'https://rpc-mainnet.matic.network',
+        nativeCurrency: 'MATIC',
+        explorer: 'https://polygonscan.com/',
+    },
+    80001: {
+        label: 'Mumbai Testnet',
+        rpcUrl: 'https://rpc-mumbai.maticvigil.com',
+        nativeCurrency: 'MATIC',
+        explorer: 'https://explorer-mumbai.maticvigil.com/',
+    }
+}
+
+// export const PINATA_API_KEY = "c69a1516d6d0940f6473";
+// export const PINATA_API_SECRET = "97d1db7df72a341c758fdbe7ab62ddb58922e93aa7d7504c00862480e585b868";
+// export const PINATA_JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI5ZjZlZThmYy0yYmYyLTRhYTgtYTMyNi0yM2E4M2Y1MDU0MzQiLCJlbWFpbCI6ImphY2tzb25AeWllbGRseS5maW5hbmNlIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siaWQiOiJGUkExIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZX0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6ImM2OWExNTE2ZDZkMDk0MGY2NDczIiwic2NvcGVkS2V5U2VjcmV0IjoiOTdkMWRiN2RmNzJhMzQxYzc1OGZkYmU3YWI2MmRkYjU4OTIyZTkzYWE3ZDc1MDRjMDA4NjI0ODBlNTg1Yjg2OCIsImlhdCI6MTYzODI3NTgxMH0.D5_hJxnMEdRs0MOj93ELh3N0u_FSkKpNg8LRfofylio";
+
