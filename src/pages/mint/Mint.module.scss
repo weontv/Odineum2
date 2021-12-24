@@ -15,6 +15,9 @@
   &:hover {
     transform: translateY(-5px);
   }
+  &:active {
+    transform: translateY(0px);
+  }
   @media (max-width: 700px) {
     font-size: 56px;
   }

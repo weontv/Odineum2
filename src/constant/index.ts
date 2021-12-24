@@ -1,7 +1,7 @@
-export const CHAIN_ID = 137
+export const CHAIN_ID = 97
 export const NFT_ADDRESS = 0x1cbAF629aE46f07bcefBA7b49c2DFE1C0EC6f6dF
 export const NFT_MARKET_ADDRESS = 0x8fEa618D45E669681d601DAbbDC0Af12812D639D
-export const PROVIDER_URL = 'https://polygon-mainnet.g.alchemy.com/v2/9xzmqc-b30v1X5LiURSY8l1eMUsq5caB'
+export const PROVIDER_URL = 'https://data-seed-prebsc-1-s1.binance.org:8545/'
 // export const CHAIN_ID = 80001;
 export const CHAIN_ID_ERR_MSG = 'Please change your network to Polygon';
 export const METAMASK_INSTALL_ERR_MSG = 'Please check you installed Metamask';
@@ -14,17 +14,17 @@ export const DefaultNetwork = Number(CHAIN_ID);
 export const supportedChainIds = [Number(CHAIN_ID)];
 
 export const networkInfo: any = {
-    137: {
-        label: 'Polygon',
-        rpcUrl: 'https://rpc-mainnet.matic.network',
-        nativeCurrency: 'MATIC',
-        explorer: 'https://polygonscan.com/',
+    97: {
+        label: 'Smart Chain - Testnet',
+        rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+        nativeCurrency: 'BNB',
+        explorer: 'https://testnet.bscscan.com',
     },
-    80001: {
-        label: 'Mumbai Testnet',
-        rpcUrl: 'https://rpc-mumbai.maticvigil.com',
-        nativeCurrency: 'MATIC',
-        explorer: 'https://explorer-mumbai.maticvigil.com/',
+    56: {
+        label: 'Binance Smart Chain',
+        rpcUrl: 'https://bsc-dataseed.binance.org/',
+        nativeCurrency: 'BNB',
+        explorer: 'https://bscscan.com/',
     }
 }
 

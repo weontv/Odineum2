@@ -20,7 +20,7 @@ function NftHeader() {
 
   const changeNetwork = async () => {
     const wa: any = window;
-    const {ethereum} = wa;
+    const { ethereum } = wa;
     try {
       await ethereum.request({
         method: 'wallet_switchEthereumChain',
@@ -84,9 +84,9 @@ function NftHeader() {
         <div className="flex items-center">
           <button
             type="button" className={styles.walletBtn}
-            onClick={() => connectWallet()}
+            onClick={connectWallet}
           >
-            CONNECT WALLET
+            {active && account ? `${shortenAddress(account)}` : 'CONNECT WALLET'}
           </button>
           <button type="button" onClick={() => setIsHamburger(!isHamburger)} className={`${styles.hamburger} ${isHamburger ? styles.active : ''}`}>
             <span />
