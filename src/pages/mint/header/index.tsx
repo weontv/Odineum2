@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
+import { toast } from "react-toastify";
 import { chainIdToHexString, shortenAddress } from '../../../utils/web3Functions';
 import { useEagerConnect } from "../../../hooks/useEagerConnect";
 import { useInactiveListener } from "../../../hooks/useInactiveListener";
+import { firestore } from "../../../firebase";
 import { DefaultNetwork, networkInfo } from '../../../constant';
 import styles from "./NftHeader.module.scss";
 
@@ -12,11 +14,40 @@ export const injectedConnector = new InjectedConnector({
   supportedChainIds: [DefaultNetwork],
 });
 
+export type User = {
+  account: string | null | undefined,
+  avatar: string,
+  imageCover: string,
+  firstName: string,
+  lastName: string,
+  nickName: string,
+  bio: string,
+  followers: number[],
+}
+
 function NftHeader() {
   const [isHamburger, setIsHamburger] = useState<boolean>(false);
   const { error, account, library, activate, active, connector } = useWeb3React();
   const isUnsupportedChainIdError = error instanceof UnsupportedChainIdError;
   const [wrongNetwork, setWrongNetwork] = useState(false);
+  const [activatingConnector, setActivatingConnector] = useState();
+
+  useEffect(() => {
+    if (activatingConnector && activatingConnector === connector) {
+      setActivatingConnector(undefined);
+    }
+  }, [activatingConnector, connector]);
+  
+  const [user, setUser] = useState<any>({
+    account,
+    avatar: "assets/img/avatars/avatar.jpg",
+    imageCover: "/assets/img/bg/bg.png",
+    firstName: "User",
+    lastName: "",
+    nickName: "@user",
+    bio: "",
+    followers: [],
+  });
 
   const changeNetwork = async () => {
     const wa: any = window;
@@ -70,6 +101,27 @@ function NftHeader() {
       console.log(err);
     }
   };
+
+  const getUser = async (userId: any) => {
+    if (userId) {
+      const userInfo = (
+        await firestore.collection("users").doc(userId).get()
+      ).data();
+      if (userInfo) {
+        setUser(userInfo);
+      } else if (active) {
+        toast.info("Please set up your profile before you use the marketplace");
+      }
+    }
+  };
+
+  useEffect(() => {
+    getUser(account);
+  }, [account, active]);
+
+  const triedEager = useEagerConnect();
+  useInactiveListener(!triedEager || !!activatingConnector);
+
   return (
     <>
       <div className={styles.navbar}>
