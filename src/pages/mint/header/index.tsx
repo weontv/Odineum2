@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
@@ -9,6 +9,8 @@ import { useInactiveListener } from "../../../hooks/useInactiveListener";
 import { firestore } from "../../../firebase";
 import { DefaultNetwork, networkInfo } from '../../../constant';
 import styles from "./NftHeader.module.scss";
+import { IconBNB } from "../../../utils/Icons";
+import { Balance } from "../../../components/balance";
 
 export const injectedConnector = new InjectedConnector({
   supportedChainIds: [DefaultNetwork],
@@ -31,13 +33,15 @@ function NftHeader() {
   const isUnsupportedChainIdError = error instanceof UnsupportedChainIdError;
   const [wrongNetwork, setWrongNetwork] = useState(false);
   const [activatingConnector, setActivatingConnector] = useState();
+  const [isOpen, setIsOpen] = useState(false);
+  const headerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (activatingConnector && activatingConnector === connector) {
       setActivatingConnector(undefined);
     }
   }, [activatingConnector, connector]);
-  
+
   const [user, setUser] = useState<any>({
     account,
     avatar: "assets/img/avatars/avatar.jpg",
@@ -119,6 +123,21 @@ function NftHeader() {
     getUser(account);
   }, [account, active]);
 
+
+  const handleClickOutside = (event: any) => {
+    if (headerRef.current && !headerRef.current.contains(event.target)) {
+      if (isOpen) setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside, false);
+    return () => {
+      document.removeEventListener('click', handleClickOutside, false);
+    };
+  });
+
+
   const triedEager = useEagerConnect();
   useInactiveListener(!triedEager || !!activatingConnector);
 
@@ -140,11 +159,50 @@ function NftHeader() {
           >
             {active && account ? `${shortenAddress(account)}` : 'CONNECT WALLET'}
           </button>
-          <button type="button" onClick={() => setIsHamburger(!isHamburger)} className={`${styles.hamburger} ${isHamburger ? styles.active : ''}`}>
+          <button type="button" onClick={() => setIsOpen(!isOpen)} className={`${styles.hamburger} ${isHamburger ? styles.active : ''}`}>
             <span />
             <span />
             <span />
           </button>
+          {isOpen && (
+            <div
+              className={`${styles.dropdown} z-10 origin-topRight absolute w-5 min-w-max py-4 px-12 rounded-md shadow-lg bg-gray ring-1 ring-black ring-opacity-5 focus:outline-none bg-body`}
+              ref={headerRef}
+            >
+              <div className="py-1" role="none">
+                {active ? (
+                  <>
+                    <div className="flex justify-center items-center border border-white-400 mb-4 p-3 rounded-2xl cursor-pointer">
+                      <div className="text-white text-black p-0">
+                        <IconBNB />
+                      </div>
+                      <div className="flex flex-col items-center mx-4 uppercase text-sm text">
+                        <p>Balance</p>
+                        <div className="text-white text-black">
+                          <Balance />
+                          BNB
+                        </div>
+                      </div>
+                    </div>
+                    <Link to="/users/"
+                      className="flex items-center justify-start text-md hover:text-white hover:text-black text-left"
+                    >
+                      My Profile
+                    </Link>
+                  </>
+                ) : (
+                  <Link to="/"
+                    className="font-dropdown block flex items-center mb-6 justify-start hover:text-white hover:text-black"
+                    onClick={(e) => {
+                      setIsOpen(false);
+                    }}
+                  >
+                    <span className="mr-4"> Connect Wallet </span>
+                  </Link>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

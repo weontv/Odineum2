@@ -1,0 +1,64 @@
+.header {
+  padding-left: 16px;
+  padding-right: 16px;
+  vertical-align: inherit;
+  flex-shrink: 0;
+  flex-direction: column;
+  flex-basis: auto;
+  display: flex;
+  -webkit-box-align: stretch;
+  align-items: stretch;
+  @media screen and (min-width: 981px) {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+  @media screen and (min-width: 768px) {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+
+  @media screen and (min-width: 578px) {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+.forms {
+  flex: 1 1 auto;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+  -webkit-box-flex: 1;
+  margin-top: 40 px;
+  margin-right: 0 px;
+  vertical-align: inherit;
+  width: 100%;
+  flex-direction: column;
+  display: flex;
+  -webkit-box-align: stretch;
+  align-items: stretch;
+  @media screen and (min-width: 981px) {
+    margin-top: 0px;
+    margin-right: 40px;
+  }
+  @media screen and (min-width: 768px) {
+    margin-top: 0px;
+    margin-right: 40px;
+  }
+  @media screen and (min-width: 578px) {
+    margin-top: 40px;
+    margin-right: 0px;
+  }
+}
+
+.upload {
+  display: flex;
+  justify-content: center;
+  vertical-align: inherit;
+  max-width: 100%;
+  flex-shrink: 0;
+  flex-direction: column;
+  flex-basis: auto;
+  -webkit-box-align: stretch;
+  align-items: stretch;
+}

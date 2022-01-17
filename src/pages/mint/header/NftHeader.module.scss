@@ -10,6 +10,7 @@
   font-size: 37px;
   color: #ffffff;
   height: 120px;
+  font-family: GothamBlack;
   transition: height 0.5s ease;
   &::after {
     position: absolute;
@@ -137,5 +138,9 @@
       z-index: -1;
       border-radius: 40px;
     }
+  }
+  .dropdown {
+    top: 105px;
+    right: 10px;
   }
 }
