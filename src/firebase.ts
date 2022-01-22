@@ -3,16 +3,14 @@ import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage"
 
-// TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCqBJvb4J18ZOf4hWS5q26VqhweJKH9OFE",
-  authDomain: "odineum-f631a.firebaseapp.com",
-  databaseURL: "https://odineum-f631a-default-rtdb.firebaseio.com",
-  projectId: "odineum-f631a",
-  storageBucket: "odineum-f631a.appspot.com",
-  messagingSenderId: "270691852661",
-  appId: "1:270691852661:web:e2cb0004feeefeeb09733c",
-  measurementId: "G-8CZS9R8H90"
+  apiKey: "AIzaSyB64SxT0gq4RwXNH50Y_v5kzW_t6mDWB5I",
+  authDomain: "odineum-82686.firebaseapp.com",
+  projectId: "odineum-82686",
+  storageBucket: "odineum-82686.appspot.com",
+  messagingSenderId: "1076040923920",
+  appId: "1:1076040923920:web:c3a18b5fb9088df6aac395",
+  measurementId: "G-1R7EH10PXB"
 };
 
 firebase.initializeApp(firebaseConfig);

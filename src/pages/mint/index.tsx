@@ -1,14 +1,59 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactSlider from "react-slider";
 import Header from "./header";
 import Footer from "../../components/footer";
 import styles from "./Mint.module.scss";
+import { firestore } from "../../firebase";
 
 
 function Mint(this: any) {
   // const [rangeVal, setRangeVal] = useState(0)
   const [price, setPrice] = useState<number>(0.15);
   const [number, setNumber] = useState<number>(1);
+  const [orderList, setOrder] = useState<number[]>([]);
+
+  // const randomArrayShuffle = (array: number[]) =>  {
+  //   let currentIndex = array.length;
+  //   let temporaryValue;
+  //   let randomIndex;
+  //   const tempArray = [...array];
+  //   while (currentIndex !== 0) {
+  //     randomIndex = Math.floor(Math.random() * currentIndex);
+  //     currentIndex -= 1;
+  //     temporaryValue = tempArray[currentIndex];
+  //     tempArray[currentIndex] = tempArray[randomIndex];
+  //     tempArray[randomIndex] = temporaryValue;
+  //   }
+  //   return tempArray;
+  // }
+
+  // const nftOrder = () => {
+  //   const order = [];
+  //   for (let i = 0; i < 3000; i+=1) {
+  //     order.push(1);
+  //   }
+  //   for (let i = 0; i < 2500; i+=1) {
+  //     order.push(2);
+  //   }
+  //   for (let i = 0; i < 2000; i+=1) {
+  //     order.push(3);
+  //   }
+  //   for (let i = 0; i < 1500; i+=1) {
+  //     order.push(4);
+  //   }
+  //   for (let i = 0; i < 1000; i+=1) {
+  //     order.push(5);
+  //   }
+  //   const randomOrder = randomArrayShuffle(order);
+  //   const userInfo = firestore.collection("nftOrder").doc("nftOrder").set({randomOrder});
+  //   setOrder(randomOrder);
+  //   console.log(randomOrder);
+  // }
+
+  // useEffect(() => {
+  //   nftOrder();
+  // }, []);
+
   return (
     <div className="mint-bg">
       <Header />

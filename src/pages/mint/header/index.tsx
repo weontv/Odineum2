@@ -76,9 +76,13 @@ function NftHeader() {
               {
                 chainId: chainIdToHexString(DefaultNetwork),
                 chainName: item.label,
-                rpcUrls: item.rpcUrl,
-                nativeCurrency: item.nativeCurrency,
-                blockExplorerUrls: item.explorer,
+                rpcUrls: [item.rpcUrl],
+                nativeCurrency: {
+                  name: item.nativeCurrency,
+                  symbol: item.nativeCurrency,
+                  decimals: 18
+                },
+                blockExplorerUrls: [item.explorer],
               },
             ],
           });
@@ -101,11 +105,13 @@ function NftHeader() {
   const connectWallet = async () => {
     try {
       await activate(injectedConnector);
+
     } catch (err) {
       console.log(err);
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const getUser = async (userId: any) => {
     if (userId) {
       const userInfo = (
@@ -184,10 +190,10 @@ function NftHeader() {
                         </div>
                       </div>
                     </div>
-                    <Link to="/users/"
+                    <Link to="/setting"
                       className="flex items-center justify-start text-md hover:text-white hover:text-black text-left"
                     >
-                      My Profile
+                      Setting
                     </Link>
                   </>
                 ) : (
