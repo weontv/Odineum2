@@ -51,6 +51,53 @@
   }
 }
 
+.form {
+  margin: 0 auto;
+  max-width: 1080px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 45px;
+  border-radius: 20px;
+  border: 1px gray solid;
+  margin-bottom: 50px;
+}
+
+.input {
+  max-width: 150px;
+  background-color: rgba(255, 255, 255, 0.2);
+  height: 50px;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  outline: none;
+  font-size: 18px;
+  text-align: left;
+  padding: 30px;
+}
+
+.bioContainer {
+  max-width: 800px;
+  width: 100%;
+  margin-top: 50px;
+}
+
+.bio {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  outline: none;
+  font-size: 18px;
+  text-align: left;
+  height: 200px;
+  padding: 30px;
+}
+
 .upload {
   display: flex;
   justify-content: center;
@@ -61,4 +108,23 @@
   flex-basis: auto;
   -webkit-box-align: stretch;
   align-items: stretch;
+}
+
+.saveBtn {
+  font-family: NexaBold;
+  font-size: 30px;
+  color: white;
+  text-shadow: 4px 6px 4.5px black;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding-left: 40px;
+  padding-right: 40px;
+  border-radius: 20px;
+  border: 1px gray solid;
+  transition: transform 0.3s;
+  &:hover {
+    transform: translateY(-5px);
+  }
+  &:active {
+    transform: translateY(0px);
+  }
 }
