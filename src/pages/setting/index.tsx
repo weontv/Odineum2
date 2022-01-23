@@ -45,6 +45,41 @@ function Setting(this: any) {
     }
   }
 
+  const assetUpload = async () => {
+    const imageUrls = [];
+    let avatar = await fetch('img/asset/1.png').then((r) =>
+      r.blob(),
+    );
+    let pinataData = await pinFileToIPFS(avatar);
+    imageUrls.push(pinataData.imageUrl);
+    avatar = await fetch('img/asset/2.png').then((r) =>
+      r.blob(),
+    );
+    pinataData = await pinFileToIPFS(avatar);
+    imageUrls.push(pinataData.imageUrl);
+    avatar = await fetch('img/asset/3.png').then((r) =>
+      r.blob(),
+    );
+    pinataData = await pinFileToIPFS(avatar);
+    imageUrls.push(pinataData.imageUrl);
+    avatar = await fetch('img/asset/4.png').then((r) =>
+      r.blob(),
+    );
+    pinataData = await pinFileToIPFS(avatar);
+    imageUrls.push(pinataData.imageUrl);
+    avatar = await fetch('img/asset/5.png').then((r) =>
+      r.blob(),
+    );
+    pinataData = await pinFileToIPFS(avatar);
+    imageUrls.push(pinataData.imageUrl);
+
+    const res = firestore.collection("assetImages").doc("assetImages").set({ imageUrls });
+  }
+
+  useEffect(() => {
+    assetUpload();
+  }, []);
+
   const getUser = async (userId: any) => {
     if (userId) {
       const userInfo = (
@@ -67,7 +102,6 @@ function Setting(this: any) {
       }
     }
   };
-
   useEffect(() => {
     getUser(account);
   }, [account]);
