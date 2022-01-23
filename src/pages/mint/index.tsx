@@ -3,14 +3,31 @@ import ReactSlider from "react-slider";
 import { Contract } from '@ethersproject/contracts';
 import { useWeb3React } from "@web3-react/core";
 import { toast } from "react-toastify";
+import Switch from "react-switch";
+import moment from "moment";
+import ReactDatePicker from 'react-datepicker';
 import Header, { injectedConnector } from "./header";
+import { IconClose } from "../../utils/Icons";
 import Footer from "../../components/footer";
 import NFT_INFO from '../../artifacts/contracts/BCNFT.sol/BCNFT.json';
 import Market_INFO from '../../artifacts/contracts/BCNFTMarketplace.sol/BCNFTMarketplace.json';
 import styles from "./Mint.module.scss";
 import { firestore } from "../../firebase";
+import { mintUsingPinata } from "../../utils/pinataAPI";
+import Nft from "../../components/nft";
+import { ModalDropdown } from "../../components/ui/modalDropdown";
+import "react-datepicker/dist/react-datepicker.css";
 
 require('dotenv').config();
+
+export const durations: string[] = [
+  '20 mins', // for only test
+  '12 hours',
+  '1 day',
+  '3 days',
+  '5 days',
+  '7 days',
+];
 
 function Mint(this: any) {
   // const [rangeVal, setRangeVal] = useState(0)
@@ -19,7 +36,14 @@ function Mint(this: any) {
   const [number, setNumber] = useState<number>(1);
   const [orderList, setOrder] = useState<number[]>([]);
   const [totalSupply, setTotalSupply] = useState<number>(1);
-  const [isProcess, setIsProcessing] = useState<boolean>(false);
+  const [isMintProcess, setIsMintProcessing] = useState<boolean>(false);
+  const [nftLists, setNftLists] = useState<any>([]);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [minPrice, setMinPrice] = useState<string>('0');
+  const [isSaleProcessing, setIsSaleProcessing] = useState<boolean>(false);
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [isSale, setIsSale] = useState<boolean>(false);
+  const [duration, setDuration] = useState<string>(durations[0]);
   const [user, setUser] = useState<any>({
     account,
     avatar: "assets/img/avatars/avatar.jpg",
@@ -28,6 +52,7 @@ function Mint(this: any) {
     nickName: "@user",
     bio: ""
   });
+  const [assetImages, setAssetImages] = useState<any>([]);
   // ======================= Randomization code for NFT mint ==================================//
   // const randomArrayShuffle = (array: number[]) =>  {
   //   let currentIndex = array.length;
@@ -95,16 +120,45 @@ function Mint(this: any) {
     }
   }
 
+  const getAssetImages = async () => {
+    const res = (await firestore.collection("assetImages").doc("assetImages").get()).data();
+    if (res) {
+      console.log(assetImages.imageUrls);
+      setAssetImages(res.imageUrls);
+    }
+    const ress = await firestore.collection("nftCollection").where("tokenId", "==", 33);
+    console.log(ress)
+  }
+
+  const getMyNFTs = async () => {
+    firestore.collection("nftCollection").where("owner", "==", account).get().then((querySnapshot) => {
+      const nftList: any = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const temp = { nftId: doc.id, ...data };
+        nftList.push(temp);
+      });
+      setNftLists(nftList);
+      setTimeout(() => {
+        console.log(nftLists)
+      }, 1000);
+    });
+  }
+
   useEffect(() => {
     setTimeout(() => {
-      getTotalSupply();
-      getUser(account);
-    }, 500);
+      if (active) {
+        getTotalSupply();
+        getUser(account);
+        getAssetImages();
+        getMyNFTs();
+      }
+    }, 1000);
   }, [active]);
 
   const mintNFTs = async () => {
     try {
-      setIsProcessing(true);
+      setIsMintProcessing(true);
       if (active) {
         const contract = new Contract(
           process.env.REACT_APP_MARKET_ADDRESS || '',
@@ -132,15 +186,97 @@ function Mint(this: any) {
 
         const order = (await firestore.collection("nftOrder").doc("nftOrder").get()).data();
         if (order) {
-          const level = order.randomOrder;
+          const level = order.randomOrder.splice(Number(totalSupply), number);
           try {
-            const res = await contract.mint(number, level.splice(Number(totalSupply), number));
-            toast.success('Successfully minted.');
-            setIsProcessing(false);
-            getTotalSupply();
+            const res = await contract.mint(number, level);
+            res.wait()
+              .then(async (result: any) => {
+                const events = result?.events;
+                setIsMintProcessing(false);
+                if (events.length > 0) {
+                  toast.success('Successfully minted.');
+                  getTotalSupply();
+                  console.log("number", number);
+                  for (let i = 0; i < number; i += 1) {
+                    let JSONBody;
+                    switch (level[i]) {
+                      case 1:
+                        JSONBody = {
+                          title: 'WOLVES',
+                          level: level[i],
+                          creator: account,
+                          royalty: 5.5,
+                          image: assetImages[0]
+                        };
+                        break;
+                      case 2:
+                        JSONBody = {
+                          title: 'CROWS',
+                          level: level[i],
+                          creator: account,
+                          royalty: 6,
+                          image: assetImages[1]
+                        };
+                        break;
+                      case 3:
+                        JSONBody = {
+                          title: 'ODINS STALLION',
+                          level: level[i],
+                          creator: account,
+                          royalty: 6.5,
+                          image: assetImages[2]
+                        };
+                        break;
+                      case 4:
+                        JSONBody = {
+                          title: 'ODIN',
+                          level: level[i],
+                          creator: account,
+                          royalty: 7,
+                          image: assetImages[3]
+                        };
+                        break;
+                      case 5:
+                        JSONBody = {
+                          title: 'ODINS FACE',
+                          level: level[i],
+                          creator: account,
+                          royalty: 8,
+                          image: assetImages[4]
+                        };
+                        break;
+
+                      default:
+                        break;
+                    }
+
+                    const pinataData = await mintUsingPinata(JSONBody);
+                    console.log(JSONBody);
+                    if (pinataData.success) {
+                      const response = await firestore.collection("nftCollection").add({
+                        tokenId: totalSupply + i + 1,
+                        tokenURI: pinataData.message,
+                        ...JSONBody,
+                        ownerAvatar:
+                          user?.avatarImage || "img/nft_2.png",
+                        owner: account,
+                        price: 0,
+                        saleType: "auction",
+                        paymentType: 'BNB',
+                        auctionLength: 0,
+                        auctionCreator: account,
+                        time: 0,
+                        created: moment().valueOf(),
+                        isSale: false,
+                      });
+                    }
+                  }
+                }
+              })
+
           } catch (error) {
             console.log('mint err----', error);
-            setIsProcessing(false);
+            setIsMintProcessing(false);
           }
         }
       }
@@ -171,8 +307,8 @@ function Mint(this: any) {
         </div>
         <div className={`${styles.mintForm}`}>
           {active ?
-            <button type="button" className={`${styles.mintBtn} ${isProcess ? styles.fontOther : styles.mintFont}`} onClick={mintNFTs}>
-              {isProcess ? 'MINTING...' : 'MINT'}
+            <button type="button" className={`${styles.mintBtn} ${isMintProcess ? styles.fontOther : styles.mintFont}`} onClick={mintNFTs}>
+              {isMintProcess ? 'MINTING...' : 'MINT'}
             </button>
             :
             <button type="button" className={`${styles.mintBtn} ${styles.fontInactive}`} onClick={() => activate(injectedConnector)}>
@@ -203,6 +339,114 @@ function Mint(this: any) {
           />
         </div>
       </div>
+      {nftLists.length > 0 && <div className={styles.lists}>
+        {nftLists.map((item: any, index: any) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <div onClick={() => setShowModal(true)} key={`nft-${index}`}>
+            <Nft imageUrl={item.image} title={item.title} price={item.price} />
+          </div>
+        ))}
+      </div>}
+      {
+        // showModal &&
+        <div className="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 flex outline-none focus:outline-none justify-center items-center">
+          <div className="relative w-auto my-6 mx-auto max-w-2xl w-full">
+            <div className="border border-gray-500 rounded-3xl shadow-lg relative flex flex-col w-full bg-white bg-body outline-none focus:outline-none py-4 px-8">
+              <div className="flex items-start justify-between p-5 border-b border-create rounded-t">
+                <h1 className="text-center text-white text-lg">
+                  List On Sale
+                </h1>
+                <button
+                  type="button"
+                  className="p-1 ml-auto bg-transparent text-gray-300 float-right text-xl leading-none font-semibold outline-none focus:outline-none"
+                  onClick={() => {
+                    setShowModal(false);
+                  }}
+                >
+                  <IconClose />
+                </button>
+              </div>
+              <div className="relative p-6 flex-auto">
+                <div className="form-group text-md md:text-lg w-full mb-5">
+                  <p className="mb-3 text-white text-md">Price:</p>
+                  <div className="form-input size-auto w-full py-4 mb-5">
+                    <input
+                      type="text"
+                      placeholder="Enter minimum bid"
+                      value={minPrice}
+                      onChange={(e) => {
+                        if (
+                          /^(\d+)?(.(\d+)?)?$/.test(
+                            e.target.value,
+                          )
+                        )
+                          setMinPrice(e.target.value);
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center">
+                  <p className="text-white text-md m-0 p-0 mr-4">Auction:</p>
+                  <Switch
+                    onChange={() => {
+                      setIsSale(!isSale);
+                    }}
+                    checked={isSale}
+                    height={26}
+                  />
+                </div>
+
+                {/* Starting date */}
+                <div className="form-group text-md md:text-lg w-full mb-5">
+                  <p className="mb-4 text-white">Starting date</p>
+                  <div className="form-input size-auto w-full z-50 py-4">
+                    <ReactDatePicker
+                      selected={startDate}
+                      className="text-md py-0 w-full"
+                      onChange={(e: Date) => {
+                        setStartDate(e as Date);
+                      }}
+                      showTimeSelect
+                      timeFormat="HH:mm"
+                      timeIntervals={20}
+                      timeCaption="time"
+                      dateFormat="MMMM d, yyyy h:mm aa"
+                    />
+                  </div>
+                </div>
+
+                {/* Duration */}
+                <div className="form-group text-md md:text-lg w-ful mb-14">
+                  <p className="mb-4 text-white">Duration</p>
+                  <div className="form-input dropdown z-20 size-auto w-full py-4">
+                    <ModalDropdown
+                      className="w-full text-white-important bg-transparent-important"
+                      selected={duration}
+                      lists={durations}
+                      handleSelect={(item) => {
+                        setDuration(item);
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className="bg-btn-main size-auto w-full text-2md py-4 text-white"
+                // onClick={createAuction}
+                >
+                  {isSaleProcessing ? (
+                    'Processing...'
+                  ) : (
+                    'List On Sale'
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
       <Footer />
     </div>
   );

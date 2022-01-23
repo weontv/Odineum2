@@ -139,6 +139,179 @@
 .bg-gray {
   background-color: #202123;
 }
+.form-input {
+  border-radius: 13px;
+  min-height: 77px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &.cursor-not-allowed {
+    cursor: not-allowed;
+  }
+
+  &.justify-start {
+    justify-content: flex-start;
+  }
+
+  & > div {
+    padding: 0 22px;
+  }
+  &.rounded-21 {
+    border-radius: 21px;
+  }
+
+  & > input {
+    width: 100%;
+    height: 100%;
+    outline: none;
+    background: transparent;
+    border: none;
+    padding: 0 20px;
+
+    &.input-el {
+      border: 1px solid #979797;
+      border-radius: 13px;
+      padding: 16px 30px;
+      width: 170px;
+      text-align: center;
+    }
+    // &.input-tag {
+    // }
+  }
+
+  & > textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 120px;
+    outline: none;
+    background: transparent;
+    border: none;
+    margin: 20px 20px;
+  }
+
+  &.trait-item {
+    min-width: 150px;
+  }
+
+  &.size-auto {
+    height: auto;
+    min-height: auto;
+  }
+
+  &.size-auto {
+    height: auto;
+    min-height: auto;
+
+    button {
+      height: auto;
+    }
+  }
+
+  button {
+    background: transparent !important;
+    height: 72px;
+    padding: 0;
+  }
+
+  a {
+    padding: 12px 36px !important;
+  }
+
+  @media (max-width: 767px) {
+    min-height: 50px;
+    button {
+      height: 50px;
+    }
+  }
+}
+.form-input {
+  box-shadow: 0px 2.12855px 12.7713px -0.532138px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5.32138px);
+  color: white;
+  position: relative;
+  background: linear-gradient(
+    150.04deg,
+    rgba(255, 255, 255, 0.34) 1.69%,
+    rgba(255, 255, 255, 0.0848247) 15.86%,
+    rgba(255, 255, 255, 0.0669139) 36.61%,
+    rgba(255, 255, 255, 0.034) 74.74%,
+    rgba(255, 255, 255, 0.34) 89.9%
+  );
+
+  &.dropdown {
+    backdrop-filter: none;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    background: #1a1a1a;
+    left: 1.21px;
+    top: 1.21px;
+    right: 1.21px;
+    bottom: 1.21px;
+    z-index: -1;
+    border-radius: 13px;
+  }
+}
+
+.react-datepicker__input-container {
+  input {
+    background-color: #171717;
+    outline: none;
+  }
+}
+
+.bg-btn-main {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 30px;
+  height: 60px;
+  background: linear-gradient(89.83deg, #c19af0 15.36%, #5b2194 49.92%);
+  border-radius: 8px;
+  z-index: 5;
+  cursor: pointer;
+  color: white;
+  &.cursor-not-allowed {
+    cursor: not-allowed;
+  }
+  &::before {
+    content: "";
+    position: absolute;
+    background: linear-gradient(180deg, #7200ff 50%, #000000 172.62%);
+    left: 1px;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    z-index: -1;
+    border-radius: 8px;
+  }
+  &.sizeMd {
+    width: 156px;
+    height: 42px;
+  }
+  &.size-auto {
+    width: auto;
+    height: auto;
+    padding: 9px 16px;
+  }
+  &.w-full {
+    width: 100%;
+    &.btn-price {
+      border-radius: 13px;
+      height: 48px;
+      width: 100%;
+      &::before {
+        border-radius: 13px;
+        font-weight: bold;
+      }
+    }
+  }
+}
 
 @keyframes app-logo-spin {
   from {
