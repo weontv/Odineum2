@@ -13,12 +13,10 @@ function Setting(this: any) {
   const [user, setUser] = useState<any>({
     account,
     avatar: "assets/img/avatars/avatar.jpg",
-    imageCover: "/assets/img/bg/bg.png",
     firstName: "User",
     lastName: "",
     nickName: "@user",
-    bio: "",
-    followers: [],
+    bio: ""
   });
   const [bioLength, setBioLength] = useState(0);
   const [firstName, setFirstName] = useState<string>('');
@@ -53,7 +51,17 @@ function Setting(this: any) {
         await firestore.collection("users").doc(userId).get()
       ).data();
       if (userInfo) {
-        setUser(userInfo);
+        if (userInfo.avatarImage) {
+          const avatar = await fetch(userInfo.avatarImage).then((r) =>
+            r.blob(),
+          );
+          setAvatarUrl(userInfo.avatarImage);
+          setAvatarImage(avatar);
+        }
+        setFirstName(userInfo.firstName);
+        setLastName(userInfo.lastName);
+        setNickName(userInfo.nickName.substring(1));
+        setBio(userInfo.bio);
       } else if (active) {
         toast.info("Please set up your profile before you use the marketplace");
       }
@@ -62,7 +70,7 @@ function Setting(this: any) {
 
   useEffect(() => {
     getUser(account);
-  }, []);
+  }, [account]);
 
   const onAddAvatar = (item: File | Blob) => {
     if (item) setImageType(item.type.split('/')[0]);
@@ -91,7 +99,6 @@ function Setting(this: any) {
   };
 
   const saveData = async () => {
-    toast.error('Please fill the First Name and Last Name');
     if (!firstName || !lastName) {
       toast.error('Please fill the First Name and Last Name');
       return;
@@ -122,9 +129,10 @@ function Setting(this: any) {
 
         const payload = {
           account,
-          userName: `${firstName} ${lastName}`,
+          firstName,
+          lastName,
           nickName: `@${nickName}`,
-          avatarImage: avatarUrl,
+          avatarImage: imageAvatar,
           bio,
         };
         if (account) {
