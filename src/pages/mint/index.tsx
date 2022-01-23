@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from "react";
 import ReactSlider from "react-slider";
-import Header from "./header";
+import { Contract } from '@ethersproject/contracts';
+import { useWeb3React } from "@web3-react/core";
+import { toast } from "react-toastify";
+import Header, { injectedConnector } from "./header";
 import Footer from "../../components/footer";
+import NFT_INFO from '../../artifacts/contracts/BCNFT.sol/BCNFT.json';
+import Market_INFO from '../../artifacts/contracts/BCNFTMarketplace.sol/BCNFTMarketplace.json';
 import styles from "./Mint.module.scss";
 import { firestore } from "../../firebase";
 
+require('dotenv').config();
 
 function Mint(this: any) {
   // const [rangeVal, setRangeVal] = useState(0)
+  const { account, library, active, activate } = useWeb3React();
   const [price, setPrice] = useState<number>(0.15);
   const [number, setNumber] = useState<number>(1);
   const [orderList, setOrder] = useState<number[]>([]);
-
+  const [totalSupply, setTotalSupply] = useState<number>(1);
+  const [isProcess, setIsProcessing] = useState<boolean>(false);
+  // ======================= Randomization code for NFT mint ==================================//
   // const randomArrayShuffle = (array: number[]) =>  {
   //   let currentIndex = array.length;
   //   let temporaryValue;
@@ -50,9 +59,79 @@ function Mint(this: any) {
   //   console.log(randomOrder);
   // }
 
-  // useEffect(() => {
-  //   nftOrder();
-  // }, []);
+  const getTotalSupply = async () => {
+    if (active) {
+      const nftContract = new Contract(
+        process.env.REACT_APP_NFT_ADDRESS || '',
+        NFT_INFO.abi,
+        library.getSigner(),
+      );
+      const total = await nftContract.totalSupply();
+      setTotalSupply(Number(total));
+    } else {
+      toast.warning("Wallet is not connected or you won't be able to do anything here");
+    }
+  }
+
+  useEffect(() => {
+    getTotalSupply();
+  }, [active]);
+
+  const mintNFTs = async () => {
+    setIsProcessing(true);
+    if (active) {
+      const contract = new Contract(
+        process.env.REACT_APP_MARKET_ADDRESS || '',
+        Market_INFO.abi,
+        library.getSigner(),
+      );
+      const nftContract = new Contract(
+        process.env.REACT_APP_NFT_ADDRESS || '',
+        NFT_INFO.abi,
+        library.getSigner(),
+      );
+
+      // check if the wallet is approved to contract
+      const isApproved = await nftContract.isApprovedForAll(
+        account,
+        process.env.REACT_APP_MARKET_ADDRESS,
+      );
+      if (!isApproved) {
+        const approve = await nftContract.setApprovalForAll(
+          process.env.REACT_APP_MARKET_ADDRESS,
+          true,
+        );
+        await approve.wait();
+      }
+
+      const order = (await firestore.collection("nftOrder").doc("nftOrder").get()).data();
+      if (order) {
+        const level = order.randomOrder;
+        
+        try {
+          const res = await contract.mint(number, level.splice(Number(totalSupply), number));
+          toast.success('Successfully minted.');
+          setIsProcessing(false);
+          getTotalSupply();
+        } catch (error) {
+          console.log('mint err----', error);
+          setIsProcessing(false);
+        }
+        // res
+        //   .wait()
+        //   .then((result: any) => {
+        //     toast.success('Successfully minted.');
+        //     setIsProcessing(false);
+        //     getTotalSupply();
+        //   })
+        //   .catch((err: any) => {
+        //     console.log('mint err----', err);
+        //     setIsProcessing(false);
+        //   });
+      }
+
+    }
+  }
 
   return (
     <div className="mint-bg">
@@ -64,25 +143,32 @@ function Mint(this: any) {
           </span>
           <div className="text-right">
             <span className="text-2xl inline-block text-white whitespace-nowrap">
-              100
+              {totalSupply}
               /10,000
             </span>
           </div>
         </div>
         <div className="overflow-hidden h-4 mb-12 flex rounded-xl bg-white w-full max-w-xl">
           <div style={{
-            width: `${Math.max(1000 / 10000 * 100, 1)}%`
+            width: `${Math.max(1000 / 10000 * totalSupply, 1)}%`
           }} className="shadow-none rounded-xl flex flex-col text-center whitespace-nowrap text-white justify-center bg-yellow" />
         </div>
         <div className={`${styles.mintForm}`}>
-          <button type="button" className={styles.mintBtn}>
-            MINT
-          </button>
+          {active ?
+            <button type="button" className={`${styles.mintBtn} ${isProcess ? styles.fontOther : styles.mintFont}`} onClick={mintNFTs}>
+              {isProcess ? 'MINTING...' : 'MINT'}
+            </button>
+            :
+            <button type="button" className={`${styles.mintBtn} ${styles.fontInactive}`} onClick={() => activate(injectedConnector)}>
+              SALE IS NOT ACTIVE OR NO WALLET IS CONNECTED
+            </button>
+          }
           <div id="mint" className="flex justify-start items-center mt-16 text-sm md:text-2xl">
             <span className="flex text-white items-center bg-grey-lighter rounded rounded-r-none px-3">PRICE:</span>
             <input type="number"
               min={0.15}
               value={price}
+              disabled
               onChange={(e) => setPrice(Number(e.target.value))}
               className={styles.price}
             />
