@@ -20,6 +20,14 @@ function Mint(this: any) {
   const [orderList, setOrder] = useState<number[]>([]);
   const [totalSupply, setTotalSupply] = useState<number>(1);
   const [isProcess, setIsProcessing] = useState<boolean>(false);
+  const [user, setUser] = useState<any>({
+    account,
+    avatar: "assets/img/avatars/avatar.jpg",
+    firstName: "User",
+    lastName: "",
+    nickName: "@user",
+    bio: ""
+  });
   // ======================= Randomization code for NFT mint ==================================//
   // const randomArrayShuffle = (array: number[]) =>  {
   //   let currentIndex = array.length;
@@ -59,6 +67,20 @@ function Mint(this: any) {
   //   console.log(randomOrder);
   // }
 
+
+  const getUser = async (userId: any) => {
+    if (userId) {
+      const userInfo = (
+        await firestore.collection("users").doc(userId).get()
+      ).data();
+      if (userInfo) {
+        setUser(userInfo);
+      } else if (active) {
+        toast.info("Please set up your profile before you use the marketplace");
+      }
+    }
+  };
+
   const getTotalSupply = async () => {
     if (active) {
       const nftContract = new Contract(
@@ -74,62 +96,56 @@ function Mint(this: any) {
   }
 
   useEffect(() => {
-    getTotalSupply();
+    setTimeout(() => {
+      getTotalSupply();
+      getUser(account);
+    }, 500);
   }, [active]);
 
   const mintNFTs = async () => {
-    setIsProcessing(true);
-    if (active) {
-      const contract = new Contract(
-        process.env.REACT_APP_MARKET_ADDRESS || '',
-        Market_INFO.abi,
-        library.getSigner(),
-      );
-      const nftContract = new Contract(
-        process.env.REACT_APP_NFT_ADDRESS || '',
-        NFT_INFO.abi,
-        library.getSigner(),
-      );
-
-      // check if the wallet is approved to contract
-      const isApproved = await nftContract.isApprovedForAll(
-        account,
-        process.env.REACT_APP_MARKET_ADDRESS,
-      );
-      if (!isApproved) {
-        const approve = await nftContract.setApprovalForAll(
-          process.env.REACT_APP_MARKET_ADDRESS,
-          true,
+    try {
+      setIsProcessing(true);
+      if (active) {
+        const contract = new Contract(
+          process.env.REACT_APP_MARKET_ADDRESS || '',
+          Market_INFO.abi,
+          library.getSigner(),
         );
-        await approve.wait();
-      }
+        const nftContract = new Contract(
+          process.env.REACT_APP_NFT_ADDRESS || '',
+          NFT_INFO.abi,
+          library.getSigner(),
+        );
 
-      const order = (await firestore.collection("nftOrder").doc("nftOrder").get()).data();
-      if (order) {
-        const level = order.randomOrder;
-        
-        try {
-          const res = await contract.mint(number, level.splice(Number(totalSupply), number));
-          toast.success('Successfully minted.');
-          setIsProcessing(false);
-          getTotalSupply();
-        } catch (error) {
-          console.log('mint err----', error);
-          setIsProcessing(false);
+        // check if the wallet is approved to contract
+        const isApproved = await nftContract.isApprovedForAll(
+          account,
+          process.env.REACT_APP_MARKET_ADDRESS,
+        );
+        if (!isApproved) {
+          const approve = await nftContract.setApprovalForAll(
+            process.env.REACT_APP_MARKET_ADDRESS,
+            true,
+          );
+          await approve.wait();
         }
-        // res
-        //   .wait()
-        //   .then((result: any) => {
-        //     toast.success('Successfully minted.');
-        //     setIsProcessing(false);
-        //     getTotalSupply();
-        //   })
-        //   .catch((err: any) => {
-        //     console.log('mint err----', err);
-        //     setIsProcessing(false);
-        //   });
-      }
 
+        const order = (await firestore.collection("nftOrder").doc("nftOrder").get()).data();
+        if (order) {
+          const level = order.randomOrder;
+          try {
+            const res = await contract.mint(number, level.splice(Number(totalSupply), number));
+            toast.success('Successfully minted.');
+            setIsProcessing(false);
+            getTotalSupply();
+          } catch (error) {
+            console.log('mint err----', error);
+            setIsProcessing(false);
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 

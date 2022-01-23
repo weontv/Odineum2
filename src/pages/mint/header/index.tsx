@@ -42,16 +42,14 @@ function NftHeader() {
     }
   }, [activatingConnector, connector]);
 
-  const [user, setUser] = useState<any>({
-    account,
-    avatar: "assets/img/avatars/avatar.jpg",
-    imageCover: "/assets/img/bg/bg.png",
-    firstName: "User",
-    lastName: "",
-    nickName: "@user",
-    bio: "",
-    followers: [],
-  });
+    const [user, setUser] = useState<any>({
+      account,
+      avatar: "assets/img/avatars/avatar.jpg",
+      firstName: "User",
+      lastName: "",
+      nickName: "@user",
+      bio: ""
+    });
 
   const changeNetwork = async () => {
     const wa: any = window;
