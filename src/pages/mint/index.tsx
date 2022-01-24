@@ -42,7 +42,7 @@ function Mint(this: any) {
   const [minPrice, setMinPrice] = useState<string>('0');
   const [isSaleProcessing, setIsSaleProcessing] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date>(new Date());
-  const [isSale, setIsSale] = useState<boolean>(false);
+  const [isAuction, setIsAuction] = useState<boolean>(false);
   const [duration, setDuration] = useState<string>(durations[0]);
   const [user, setUser] = useState<any>({
     account,
@@ -347,8 +347,7 @@ function Mint(this: any) {
           </div>
         ))}
       </div>}
-      {
-        // showModal &&
+      {showModal &&
         <div className="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 flex outline-none focus:outline-none justify-center items-center">
           <div className="relative w-auto my-6 mx-auto max-w-2xl w-full">
             <div className="border border-gray-500 rounded-3xl shadow-lg relative flex flex-col w-full bg-white bg-body outline-none focus:outline-none py-4 px-8">
@@ -386,50 +385,52 @@ function Mint(this: any) {
                   </div>
                 </div>
 
-                <div className="flex items-center">
+                <div className="flex items-center mb-5">
                   <p className="text-white text-md m-0 p-0 mr-4">Auction:</p>
                   <Switch
                     onChange={() => {
-                      setIsSale(!isSale);
+                      setIsAuction(!isAuction);
                     }}
-                    checked={isSale}
+                    checked={isAuction}
                     height={26}
                   />
                 </div>
 
                 {/* Starting date */}
-                <div className="form-group text-md md:text-lg w-full mb-5">
-                  <p className="mb-4 text-white">Starting date</p>
-                  <div className="form-input size-auto w-full z-50 py-4">
-                    <ReactDatePicker
-                      selected={startDate}
-                      className="text-md py-0 w-full"
-                      onChange={(e: Date) => {
-                        setStartDate(e as Date);
-                      }}
-                      showTimeSelect
-                      timeFormat="HH:mm"
-                      timeIntervals={20}
-                      timeCaption="time"
-                      dateFormat="MMMM d, yyyy h:mm aa"
-                    />
-                  </div>
-                </div>
+                { isAuction &&
+                  <>
+                    <div className="form-group text-md md:text-lg w-full mb-5">
+                      <p className="mb-4 text-white">Starting date</p>
+                      <div className="form-input size-auto w-full z-50 py-4">
+                        <ReactDatePicker
+                          selected={startDate}
+                          className="text-md py-0 w-full"
+                          onChange={(e: Date) => {
+                            setStartDate(e as Date);
+                          }}
+                          showTimeSelect
+                          timeFormat="HH:mm"
+                          timeIntervals={20}
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                        />
+                      </div>
+                    </div>
 
-                {/* Duration */}
-                <div className="form-group text-md md:text-lg w-ful mb-14">
-                  <p className="mb-4 text-white">Duration</p>
-                  <div className="form-input dropdown z-20 size-auto w-full py-4">
-                    <ModalDropdown
-                      className="w-full text-white-important bg-transparent-important"
-                      selected={duration}
-                      lists={durations}
-                      handleSelect={(item) => {
-                        setDuration(item);
-                      }}
-                    />
-                  </div>
-                </div>
+                    <div className="form-group text-md md:text-lg w-ful mb-14">
+                      <p className="mb-4 text-white">Duration</p>
+                      <div className="form-input dropdown z-20 size-auto w-full py-4">
+                        <ModalDropdown
+                          className="w-full text-white-important bg-transparent-important"
+                          selected={duration}
+                          lists={durations}
+                          handleSelect={(item) => {
+                            setDuration(item);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </>}
 
                 <button
                   type="button"
