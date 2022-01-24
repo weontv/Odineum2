@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import Switch from "react-switch";
 import moment from "moment";
 import ReactDatePicker from 'react-datepicker';
+import { parseUnits } from '@ethersproject/units';
 import Header, { injectedConnector } from "./header";
 import { IconClose } from "../../utils/Icons";
 import Footer from "../../components/footer";
@@ -29,6 +30,20 @@ export const durations: string[] = [
   '7 days',
 ];
 
+export const durationsTime: any = {
+  '20 mins': 20 * 60, // for only test
+  '12 hours': 12 * 3600,
+  '1 day': 24 * 3600,
+  '3 days': 3 * 24 * 3600,
+  '5 days': 5 * 24 * 3600,
+  '7 days': 7 * 24 * 3600,
+};
+
+export const paymentTypes: string[] = [
+  'BNB',
+  'BCTN'
+];
+
 function Mint(this: any) {
   // const [rangeVal, setRangeVal] = useState(0)
   const { account, library, active, activate } = useWeb3React();
@@ -39,11 +54,13 @@ function Mint(this: any) {
   const [isMintProcess, setIsMintProcessing] = useState<boolean>(false);
   const [nftLists, setNftLists] = useState<any>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [minPrice, setMinPrice] = useState<string>('0');
+  const [minPrice, setMinPrice] = useState<number>(0);
   const [isSaleProcessing, setIsSaleProcessing] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [isAuction, setIsAuction] = useState<boolean>(false);
   const [duration, setDuration] = useState<string>(durations[0]);
+  const [selectedNFT, setSelectedNFt] = useState<any>({});
+  const [paymentType, setPaymentType] = useState<string>(paymentTypes[0]);
   const [user, setUser] = useState<any>({
     account,
     avatar: "assets/img/avatars/avatar.jpg",
@@ -53,6 +70,7 @@ function Mint(this: any) {
     bio: ""
   });
   const [assetImages, setAssetImages] = useState<any>([]);
+
   // ======================= Randomization code for NFT mint ==================================//
   // const randomArrayShuffle = (array: number[]) =>  {
   //   let currentIndex = array.length;
@@ -100,8 +118,6 @@ function Mint(this: any) {
       ).data();
       if (userInfo) {
         setUser(userInfo);
-      } else if (active) {
-        toast.info("Please set up your profile before you use the marketplace");
       }
     }
   };
@@ -135,13 +151,10 @@ function Mint(this: any) {
       const nftList: any = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        const temp = { nftId: doc.id, ...data };
+        const temp = { ...data };
         nftList.push(temp);
       });
       setNftLists(nftList);
-      setTimeout(() => {
-        console.log(nftLists)
-      }, 1000);
     });
   }
 
@@ -159,6 +172,10 @@ function Mint(this: any) {
   const mintNFTs = async () => {
     try {
       setIsMintProcessing(true);
+      if (!user?.nickName) {
+        toast.info("Please set up your profile before you use the marketplace");
+        return;
+      }
       if (active) {
         const contract = new Contract(
           process.env.REACT_APP_MARKET_ADDRESS || '',
@@ -186,7 +203,8 @@ function Mint(this: any) {
 
         const order = (await firestore.collection("nftOrder").doc("nftOrder").get()).data();
         if (order) {
-          const level = order.randomOrder.splice(Number(totalSupply), number);
+          await getTotalSupply();
+          const level = order.randomOrder.splice(Number(totalSupply + 1), number);
           try {
             const res = await contract.mint(number, level);
             res.wait()
@@ -195,9 +213,9 @@ function Mint(this: any) {
                 setIsMintProcessing(false);
                 if (events.length > 0) {
                   toast.success('Successfully minted.');
-                  getTotalSupply();
                   console.log("number", number);
                   for (let i = 0; i < number; i += 1) {
+                    console.log(totalSupply + i);
                     let JSONBody;
                     switch (level[i]) {
                       case 1:
@@ -253,8 +271,8 @@ function Mint(this: any) {
                     const pinataData = await mintUsingPinata(JSONBody);
                     console.log(JSONBody);
                     if (pinataData.success) {
-                      const response = await firestore.collection("nftCollection").add({
-                        tokenId: totalSupply + i + 1,
+                      const response = await firestore.collection("nftCollection").doc(String(parseInt(events[i * 2 + 1].args.nftID, 10))).set({
+                        tokenId: parseInt(events[i * 2 + 1].args.nftID, 10),
                         tokenURI: pinataData.message,
                         ...JSONBody,
                         ownerAvatar:
@@ -271,6 +289,7 @@ function Mint(this: any) {
                       });
                     }
                   }
+                  await getTotalSupply();
                 }
               })
 
@@ -282,6 +301,124 @@ function Mint(this: any) {
       }
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  const createTrade = async () => {
+    if (active) {
+      setIsSaleProcessing(true);
+      const contract = new Contract(
+        process.env.REACT_APP_MARKET_ADDRESS || '',
+        Market_INFO.abi,
+        library.getSigner(),
+      );
+      const nftContract = new Contract(
+        process.env.REACT_APP_NFT_ADDRESS || '',
+        NFT_INFO.abi,
+        library.getSigner(),
+      );
+
+      // check if the wallet is approved to contract
+      const isApproved = await nftContract.isApprovedForAll(
+        account,
+        process.env.REACT_APP_MARKET_ADDRESS,
+      );
+      if (!isApproved) {
+        const approve = await nftContract.setApprovalForAll(
+          process.env.REACT_APP_MARKET_ADDRESS,
+          true,
+        );
+        await approve.wait();
+      }
+      console.log("before trade setting")
+      if (isAuction) {
+        console.log("auction")
+        console.log(
+          selectedNFT.tokenId,
+          parseUnits(durationsTime[duration].toString()),
+          parseUnits(minPrice.toString()),
+          paymentType,
+          account
+        )
+        const res = await contract.createAuction(
+          selectedNFT.tokenId,
+          durationsTime[duration],
+          parseUnits(minPrice.toString()),
+          paymentType,
+          account
+        );
+
+        res
+          .wait()
+          .then(async (result: any) => {
+            setIsSaleProcessing(false);
+            const events = result?.events;
+            if (events.length > 0) {
+              const { args } = events[events.length - 1];
+              const ress = await firestore.collection("nftCollection").doc(String(selectedNFT.tokenId)).update({
+                price: parseFloat(minPrice.toString()),
+                isSale: true,
+                saleType: "auction",
+                paymentType,
+                auctionLength: durationsTime[duration],
+                auctionCreator: account,
+                time:
+                  (parseInt(args.duration, 10) + parseInt(args.auctionStart, 10)) *
+                  1000,
+              });
+            }
+            setShowModal(false);
+          })
+          .catch((err: any) => {
+            setIsSaleProcessing(false);
+            setShowModal(false);
+            toast.error("Create failed.");
+            console.log("Put On Sale:", err);
+          });
+      } else {
+        console.log("fixed")
+        console.log(selectedNFT.tokenId, minPrice, parseUnits(minPrice.toString()), paymentType);
+        const res = await contract.openTrade(
+          selectedNFT.tokenId,
+          parseUnits(minPrice.toString()),
+          paymentType,
+        );
+        res
+          .wait()
+          .then(async (result: any) => {
+            setIsSaleProcessing(false);
+            const events = result?.events;
+            if (events.length > 0) {
+              const { args } = events[events.length - 1];
+              const ress = await firestore.collection("nftCollection").doc(String(selectedNFT.tokenId)).update({
+                price: parseFloat(minPrice.toString()),
+                isSale: true,
+                saleType: "fixed",
+                paymentType
+              });
+            }
+            setShowModal(false);
+          })
+          .catch((err: any) => {
+            setIsSaleProcessing(false);
+            toast.error("Create failed.");
+            console.log("create and auction:", err);
+            setShowModal(false);
+          });
+      }
+    }
+  }
+
+  const selectNft = async (item: any) => {
+    if (item.isSale === true) {
+      if (item.saleType === 'auction') {
+        toast.success('This nft is already in auction');
+      } else {
+        toast.success('This nft is already put on fixed sale');
+      }
+    } else {
+      setShowModal(true);
+      setSelectedNFt(item);
     }
   }
 
@@ -342,7 +479,7 @@ function Mint(this: any) {
       {nftLists.length > 0 && <div className={styles.lists}>
         {nftLists.map((item: any, index: any) => (
           // eslint-disable-next-line react/no-array-index-key
-          <div onClick={() => setShowModal(true)} key={`nft-${index}`}>
+          <div onClick={() => selectNft(item)} key={`nft-${index}`}>
             <Nft imageUrl={item.image} title={item.title} price={item.price} />
           </div>
         ))}
@@ -370,17 +507,22 @@ function Mint(this: any) {
                   <p className="mb-3 text-white text-md">Price:</p>
                   <div className="form-input size-auto w-full py-4 mb-5">
                     <input
-                      type="text"
+                      type="number"
                       placeholder="Enter minimum bid"
                       value={minPrice}
-                      onChange={(e) => {
-                        if (
-                          /^(\d+)?(.(\d+)?)?$/.test(
-                            e.target.value,
-                          )
-                        )
-                          setMinPrice(e.target.value);
-                      }}
+                      onChange={(e) => setMinPrice(Number(e.target.value))}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group text-md md:text-lg w-ful mb-14">
+                  <p className="mb-4 text-white">Payment Type</p>
+                  <div className="form-input dropdown z-20 size-auto w-full py-4">
+                    <ModalDropdown
+                      className="w-full text-white-important bg-transparent-important"
+                      selected={paymentType}
+                      lists={paymentTypes}
+                      handleSelect={(item) => setPaymentType(item)}
                     />
                   </div>
                 </div>
@@ -397,45 +539,23 @@ function Mint(this: any) {
                 </div>
 
                 {/* Starting date */}
-                { isAuction &&
-                  <>
-                    <div className="form-group text-md md:text-lg w-full mb-5">
-                      <p className="mb-4 text-white">Starting date</p>
-                      <div className="form-input size-auto w-full z-50 py-4">
-                        <ReactDatePicker
-                          selected={startDate}
-                          className="text-md py-0 w-full"
-                          onChange={(e: Date) => {
-                            setStartDate(e as Date);
-                          }}
-                          showTimeSelect
-                          timeFormat="HH:mm"
-                          timeIntervals={20}
-                          timeCaption="time"
-                          dateFormat="MMMM d, yyyy h:mm aa"
-                        />
-                      </div>
+                {isAuction &&
+                  <div className="form-group text-md md:text-lg w-ful mb-14">
+                    <p className="mb-4 text-white">Duration</p>
+                    <div className="form-input dropdown z-20 size-auto w-full py-4">
+                      <ModalDropdown
+                        className="w-full text-white-important bg-transparent-important"
+                        selected={duration}
+                        lists={durations}
+                        handleSelect={(item) => setDuration(item)}
+                      />
                     </div>
-
-                    <div className="form-group text-md md:text-lg w-ful mb-14">
-                      <p className="mb-4 text-white">Duration</p>
-                      <div className="form-input dropdown z-20 size-auto w-full py-4">
-                        <ModalDropdown
-                          className="w-full text-white-important bg-transparent-important"
-                          selected={duration}
-                          lists={durations}
-                          handleSelect={(item) => {
-                            setDuration(item);
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </>}
+                  </div>}
 
                 <button
                   type="button"
                   className="bg-btn-main size-auto w-full text-2md py-4 text-white"
-                // onClick={createAuction}
+                  onClick={createTrade}
                 >
                   {isSaleProcessing ? (
                     'Processing...'

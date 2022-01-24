@@ -48,7 +48,7 @@ export const mintUsingPinata = async (payload: any) => {
       .then((response) => ({
           success: true,
           message:
-            `https://yieldly.mypinata.cloud/ipfs/${response.data.IpfsHash}`,
+            `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`,
         }))
       .catch((error) => {
         console.log(error);

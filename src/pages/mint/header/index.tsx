@@ -189,7 +189,7 @@ function NftHeader() {
                       </div>
                     </div>
                     <Link to="/setting"
-                      className="flex items-center justify-start text-md hover:text-white hover:text-black text-left"
+                      className="flex items-center justify-start text-2xl hover:text-white hover:text-black text-left"
                     >
                       Setting
                     </Link>
