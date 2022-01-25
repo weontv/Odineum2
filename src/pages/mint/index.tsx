@@ -305,6 +305,11 @@ function Mint(this: any) {
   }
 
   const createTrade = async () => {
+    if (!user?.nickName) {
+      toast.info("Please set up your profile before you use the marketplace");
+      setShowModal(false);
+      return;
+    }
     if (active) {
       setIsSaleProcessing(true);
       const contract = new Contract(

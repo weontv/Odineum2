@@ -88,7 +88,8 @@
         font-size: 32px;
         color: #2c2c2d;
         background: linear-gradient(299deg, #cabc2b 30%, #fbed5a 46%, #cabc2b 100%, transparent);
-        padding: 1px 20px;
+        padding: 1px 30px;
+        margin-bottom: 10px;
         border-radius: 30px;
       }
       .offerBtn {
@@ -112,7 +113,7 @@
         border-bottom-right-radius: 60px;
         border-bottom: 2px solid #2d2e30;
         border-right: 2px solid #2d2e30;
-        z-index: 0;
+        z-index: -1;
       }
       @media (max-width: 1355px) {
         h5 {
