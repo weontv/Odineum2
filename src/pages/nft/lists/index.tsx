@@ -119,6 +119,7 @@ function Lists({ selectNft }: SelectFunction) {
   useEffect(() => {
     getMyNFTs();
   }, [])
+  
   return (
     <>
       <div className={styles.selection}>

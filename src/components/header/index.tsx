@@ -18,7 +18,7 @@ function Header() {
               <Link to="/mint">MINT</Link>
             </li>
             <li>
-              <a href="#roadmap" className="flex items-center">ROADMAP <img src="img/navdropdown.png" alt="drop" className="ml-4" /></a>
+              <a href="#roadmap" className="flex items-center">ROADMAP</a>
             </li>
             <li>
               <a href="#tokenomic" className="flex items-center">TOKENOMICS</a>

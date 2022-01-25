@@ -2,6 +2,14 @@ module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   darkMode: false, // or 'media' or 'class'
   theme: {
+    screens: {
+      'sm': '480px',
+      'md': '768px',
+      'lg': '976px',
+      'xl': '1440px',
+      '2xl': '1366px',
+      '3xl': '1920px'
+    },
     fontSize: {
       'sm': ['13px', '15px'],
       'base': ['16px', '19.54px'],

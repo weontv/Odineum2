@@ -207,7 +207,8 @@ function Mint(this: any) {
           const level = order.randomOrder.splice(Number(totalSupply + 1), number);
           try {
             const res = await contract.mint(number, level);
-            res.wait()
+            res
+              .wait()
               .then(async (result: any) => {
                 const events = result?.events;
                 setIsMintProcessing(false);
@@ -290,6 +291,7 @@ function Mint(this: any) {
                     }
                   }
                   await getTotalSupply();
+                  await getMyNFTs();
                 }
               })
 
@@ -359,7 +361,8 @@ function Mint(this: any) {
             setIsSaleProcessing(false);
             const events = result?.events;
             if (events.length > 0) {
-              const { args } = events[events.length - 1];
+              const { args } = await events[events.length - 1];
+              console.log("Auction Info", parseInt(args.duration, 10), parseInt(args.auctionLength, 10));
               const ress = await firestore.collection("nftCollection").doc(String(selectedNFT.tokenId)).update({
                 price: parseFloat(minPrice.toString()),
                 isSale: true,
@@ -430,7 +433,7 @@ function Mint(this: any) {
   return (
     <div className="mint-bg">
       <Header />
-      <div className="py-48 flex flex-col justify-center items-center px-4">
+      <div className="py-48 3xl:py-96 flex flex-col justify-center items-center px-4">
         <div className="flex mb-2 items-center justify-between w-full max-w-lg">
           <span className="text-2xl md:text-4xl inline-block py-1 px-2 uppercase rounded-full text-white">
             Total Minted

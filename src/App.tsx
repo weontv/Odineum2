@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="app">
       <Router />
-      <ToastContainer autoClose={5000} hideProgressBar={false} />
+      <ToastContainer autoClose={5000} hideProgressBar />
     </div>
   );
 }
