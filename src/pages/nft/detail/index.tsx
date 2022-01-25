@@ -219,6 +219,7 @@ function Detail({ nft }: any) {
                 });
               });
             });
+            getCurrentNft();
             toast.success("You have placed bid this auction");
             setIsProcessing(false);
           })
@@ -250,11 +251,16 @@ function Detail({ nft }: any) {
         res
           .wait()
           .then(async () => {
-            await firestore.collection("nftCollection").doc(String(currentNft.tokenId)).update({
-              time: 0,
-              auctionCreator: null,
-              isSale: false,
+            const ress = await firestore.collection("nftCollection").where('tokenId', '==', currentNft.tokenId).get().then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                const data = doc.data().update({
+                  time: 0,
+                  auctionCreator: null,
+                  isSale: false,
+                });
+              });
             });
+            getCurrentNft();
           })
         setIsProcessing(false);
       } catch (err) {
@@ -274,27 +280,30 @@ function Detail({ nft }: any) {
           library.getSigner(),
         );
 
-        const auctionInfo = contract.auctions(currentNft.tokenId);
+        const auctionInfo = await contract.auctions(currentNft.tokenId);
         const res = await contract.endAuction(currentNft.tokenId);
 
         res
           .wait()
           .then(async () => {
-            await firestore
-              .collection("nftCollection")
-              .doc(currentNft.tokenId)
-              .update({
-                saleType: "fixed",
-                time: 0,
-                auctionLength: null,
-                auctionCreator: null,
-                isSale: false,
-                owner:
-                  auctionInfo.bidder !==
-                    "0x0000000000000000000000000000000000000000"
-                    ? auctionInfo.bidder
-                    : auctionInfo.Creator,
+            const ress = await firestore.collection("nftCollection").where('tokenId', '==', currentNft.tokenId).get().then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                const data = doc.data().update({
+                  saleType: "fixed",
+                  time: 0,
+                  auctionLength: null,
+                  auctionCreator: null,
+                  isSale: false,
+                  owner:
+                    auctionInfo.bidder !==
+                      "0x0000000000000000000000000000000000000000"
+                      ? auctionInfo.bidder
+                      : auctionInfo.Creator,
+                  lastBidder: null,
+                });
               });
+            });
+            getCurrentNft();
           })
       } catch (err) {
         toast.error("Failed to bid auction");
