@@ -19,7 +19,7 @@ export const pinFileToIPFS = async (file: File | Blob) => {
       // handle response here
       ({
         success: true,
-        imageUrl: `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`,
+        imageUrl: `https://odineum.mypinata.cloud/ipfs/${response.data.IpfsHash}`,
       })
       )
       .catch((error) => {

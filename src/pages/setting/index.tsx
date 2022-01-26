@@ -47,32 +47,31 @@ function Setting(this: any) {
 
   // const assetUpload = async () => {
   //   const imageUrls = [];
-  //   let avatar = await fetch('img/asset/1.png').then((r) =>
+  //   let avatar = await fetch('img/asset/1.jpg').then((r) =>
   //     r.blob(),
   //   );
   //   let pinataData = await pinFileToIPFS(avatar);
   //   imageUrls.push(pinataData.imageUrl);
-  //   avatar = await fetch('img/asset/2.png').then((r) =>
+  //   avatar = await fetch('img/asset/2.jpg').then((r) =>
   //     r.blob(),
   //   );
   //   pinataData = await pinFileToIPFS(avatar);
   //   imageUrls.push(pinataData.imageUrl);
-  //   avatar = await fetch('img/asset/3.png').then((r) =>
+  //   avatar = await fetch('img/asset/3.jpg').then((r) =>
   //     r.blob(),
   //   );
   //   pinataData = await pinFileToIPFS(avatar);
   //   imageUrls.push(pinataData.imageUrl);
-  //   avatar = await fetch('img/asset/4.png').then((r) =>
+  //   avatar = await fetch('img/asset/4.jpg').then((r) =>
   //     r.blob(),
   //   );
   //   pinataData = await pinFileToIPFS(avatar);
   //   imageUrls.push(pinataData.imageUrl);
-  //   avatar = await fetch('img/asset/5.png').then((r) =>
+  //   avatar = await fetch('img/asset/5.jpg').then((r) =>
   //     r.blob(),
   //   );
   //   pinataData = await pinFileToIPFS(avatar);
   //   imageUrls.push(pinataData.imageUrl);
-
   //   const res = firestore.collection("assetImages").doc("assetImages").set({ imageUrls });
   // }
 

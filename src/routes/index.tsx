@@ -12,7 +12,7 @@ function Router() {
         <Route path="/" element={<Landing />} />
         <Route path="/nft" element={<Nft />} />
         <Route path="/mint" element={<Mint />} />
-        <Route path="/setting" element={<Setting />} />
+        <Route path="/profile" element={<Setting />} />
       </Routes>
     </BrowserRouter>
   );
