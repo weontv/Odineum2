@@ -13,9 +13,9 @@ function WhitePaper() {
     "img/whitepaper/sub_header.png"
   ]
   return (
-    <div className='w-full h-full flex justify-center items-center'>
+    <div className='whitepaper-bg'>
       <HTMLFlipBook
-        className='m-auto'
+        className='m-auto border-white-500'
         startPage={0}
         size='fixed'
         width={680}

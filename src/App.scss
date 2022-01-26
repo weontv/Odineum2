@@ -27,6 +27,15 @@
   }
 }
 
+.whitepaper-bg {
+  width: 100%;
+  height: 100vh;
+  background-image: url("./assets/nft_page.png");
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .app-logo {
   height: 40vmin;
   pointer-events: none;
