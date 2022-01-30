@@ -114,7 +114,7 @@ function NftHeader() {
             </Link>
             <h1 className="ml-4"><span>NFT</span> MARKETPLACE</h1>
           </div>
-          <CustomDropdown selected={price} lists={priceType} handleSelect={(item) => setPrice(item)} />
+          {/* <CustomDropdown selected={price} lists={priceType} handleSelect={(item) => setPrice(item)} /> */}
         </div>
         <div className="flex items-center">
           <button

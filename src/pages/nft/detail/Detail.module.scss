@@ -8,6 +8,10 @@
     flex-direction: column-reverse;
     padding: 125px 45px;
   }
+
+  @media (max-width: 600px) {
+    padding: 120px 20px;
+  }
   .nft {
     max-width: 580px;
     width: 100%;
@@ -83,6 +87,12 @@
       h1 {
         font-size: 83px;
         font-family: GothamBlack;
+      }
+      span {
+        color: gray;
+        font-size: 30px;
+        margin-top: -25px;
+        margin-bottom: 12px;
       }
       .buyBtn {
         font-family: NexaBold;

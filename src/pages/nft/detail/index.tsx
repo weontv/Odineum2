@@ -5,7 +5,7 @@ import { parseUnits } from "@ethersproject/units";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { Contract } from "ethers";
 import { toast } from "react-toastify";
-import moment from "moment";
+import { usePriceContext } from "../../../context/usePrice";
 import NFT_INFO from '../../../artifacts/contracts/BCNFT.sol/BCNFT.json';
 import Market_INFO from '../../../artifacts/contracts/BCNFTMarketplace.sol/BCNFTMarketplace.json';
 import TOKEN_INFO from '../../../artifacts/contracts/BCToken.sol/BCToken.json';
@@ -22,7 +22,7 @@ interface RenderProps {
 }
 
 function Detail({ nft }: any) {
-
+  const { bnbToUSD, updatePrice } = usePriceContext();
   const [user, setUser] = useState<any>();
   const { error, account, library, activate, active, connector } = useWeb3React();
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
@@ -338,6 +338,7 @@ function Detail({ nft }: any) {
               <h4>&#34;{currentNft.title}&#34;</h4>
               {currentNft.saleType === "auction" && <Countdown date={currentNft.time} renderer={renderer} />}
               <h1>{currentNft.price} {currentNft.paymentType}</h1>
+              <span>(${(currentNft.price * bnbToUSD).toFixed(3)})</span>
               {currentNft.saleType === "fixed" && <button type="button" className={styles.buyBtn} onClick={buyNFT}>BUY NOW</button>}
               {currentNft.saleType === "auction" &&
                 <>
