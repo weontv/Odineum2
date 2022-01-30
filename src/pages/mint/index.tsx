@@ -312,6 +312,10 @@ function Mint(this: any) {
       setShowModal(false);
       return;
     }
+    if (minPrice <= selectedNFT.price) {
+      toast.error("The price should be more than previous price");
+      return;
+    }
     if (active) {
       setIsSaleProcessing(true);
       const contract = new Contract(
@@ -386,33 +390,36 @@ function Mint(this: any) {
       } else {
         console.log("fixed")
         console.log(selectedNFT.tokenId, minPrice, parseUnits(minPrice.toString()), paymentType);
-        const res = await contract.openTrade(
-          selectedNFT.tokenId,
-          parseUnits(minPrice.toString()),
-          paymentType,
-        );
-        res
-          .wait()
-          .then(async (result: any) => {
-            setIsSaleProcessing(false);
-            const events = result?.events;
-            if (events.length > 0) {
-              const { args } = events[events.length - 1];
-              const ress = await firestore.collection("nftCollection").doc(String(selectedNFT.tokenId)).update({
-                price: parseFloat(minPrice.toString()),
-                isSale: true,
-                saleType: "fixed",
-                paymentType
-              });
-            }
-            setShowModal(false);
-          })
-          .catch((err: any) => {
-            setIsSaleProcessing(false);
-            toast.error("Create failed.");
-            console.log("create and auction:", err);
-            setShowModal(false);
-          });
+        try {
+          const res = await contract.openTrade(
+            selectedNFT.tokenId,
+            parseUnits(minPrice.toString()),
+            paymentType,
+          );
+          res
+            .wait()
+            .then(async (result: any) => {
+              setIsSaleProcessing(false);
+              const events = result?.events;
+              if (events.length > 0) {
+                const { args } = events[events.length - 1];
+                const ress = await firestore.collection("nftCollection").doc(String(selectedNFT.tokenId)).update({
+                  price: parseFloat(minPrice.toString()),
+                  isSale: true,
+                  saleType: "fixed",
+                  paymentType
+                });
+              }
+              setShowModal(false);
+              toast.success('Successfully created!');
+              await getMyNFTs();
+            })
+        } catch (err) {
+          setIsSaleProcessing(false);
+          toast.error("Creation failed.");
+          console.log("create and auction:", err);
+          setShowModal(false);
+        }
       }
     }
   }
@@ -486,8 +493,11 @@ function Mint(this: any) {
       </div>
       {nftLists.length > 0 && <div className={styles.lists}>
         {nftLists.map((item: any, index: any) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <div onClick={() => selectNft(item)} key={`nft-${index}`}>
+          <div onClick={() => {
+            selectNft(item);
+            setMinPrice(item.price);
+            // eslint-disable-next-line react/no-array-index-key
+          }} key={`nft-${index}`}>
             <Nft imageUrl={item.image} title={item.title} price={item.price} />
           </div>
         ))}

@@ -188,8 +188,13 @@ function NftHeader() {
                     </div>
                   </div>
                 </div>
+                <Link to="/nft"
+                  className="flex items-center justify-start text-2xl hover:text-white hover:text-black text-left mb-4 hover:text-gray-500"
+                >
+                  Marketplace
+                </Link>
                 <Link to="/profile"
-                  className="flex items-center justify-start text-2xl hover:text-white hover:text-black text-left"
+                  className="flex items-center justify-start text-2xl hover:text-white hover:text-black text-left hover:text-gray-500"
                 >
                   Profile
                 </Link>
