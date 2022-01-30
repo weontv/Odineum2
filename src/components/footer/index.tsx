@@ -5,7 +5,7 @@ import styles from "./Footer.module.scss";
 function Footer() {
   return (
     <div className={styles.container}>
-      <div className={styles.links}>
+      {/* <div className={styles.links}>
         <div className="flex flex-col">
           <Link to="/" className="font-bold">ABOUT</Link>
           <Link to="/">TEAM</Link>
@@ -24,7 +24,7 @@ function Footer() {
           <Link to="/">PRIVACY POLICY</Link>
           <Link to="/">DMCA</Link>
         </div>
-      </div>
+      </div> */}
       <img src="img/footerLeftBase.png" alt="leftbase" className={styles.left} />
       <img src="img/footerRightBase.png" alt="leftbase" className={styles.right} />
     </div>
