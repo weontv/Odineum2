@@ -64,7 +64,11 @@ function Detail({ nft }: any) {
   }, [currentNft])
 
   useEffect(() => {
-    setCurrentNft(nft);
+    if (nft) {
+      setCurrentNft(nft);
+      const nftPrice = nft.price * 1.1;
+      setPrice(Number(nftPrice.toFixed(2)));
+    }
   }, [nft])
 
   useEffect(() => {
@@ -157,6 +161,13 @@ function Detail({ nft }: any) {
   }
 
   const bidNft = async () => {
+    if (account) {
+      const checkUser = (await firestore.collection('users').doc(account).get()).data();
+      if (checkUser && !checkUser.nickName) {
+        toast.warning('Please complete your profile first!');
+        return;
+      }
+    }
     if (active) {
       setIsProcessing(true);
       if (account === currentNft.owner) {
@@ -169,10 +180,10 @@ function Detail({ nft }: any) {
         library.getSigner(),
       );
       // check if the wallet is approved to contract    
-      let auctionInfo = contract.auctions(currentNft.tokenId);
-
+      let auctionInfo = await contract.auctions(currentNft.tokenId);
+      console.log(auctionInfo)
       if (
-        price < currentNft.price ||
+        price <= currentNft.price ||
         (parseFloat(auctionInfo.amount) > 0 && price < currentNft.price * 1.1)
       ) {
         toast.error("Bid amount must not less than minimum bid");
@@ -204,27 +215,20 @@ function Detail({ nft }: any) {
           .wait()
           .then(async (result: any) => {
             auctionInfo = await contract.auctions(currentNft.tokenId);
-            const ress = await firestore.collection("nftCollection").where('tokenId', '==', currentNft.tokenId).get().then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                const data = doc.data().update({
-                  price: parseFloat(price.toString()),
-                  saleType: "auction",
-                  time:
-                    (parseInt(auctionInfo.duration, 10) +
-                      parseInt(auctionInfo.firstBidTime, 10)) *
-                    1000,
-                  lastBidder: account,
-                });
-              });
+            const ress = await firestore.collection("nftCollection").doc(String(currentNft.tokenId)).update({
+              price: parseFloat(price.toString()),
+              saleType: "auction",
+              time:
+                (parseInt(auctionInfo.duration, 10) +
+                  parseInt(auctionInfo.firstBidTime, 10)) *
+                1000,
+              lastBidder: account,
             });
-            getCurrentNft();
-            toast.success("You have placed bid this auction");
+            const nftData = (await firestore.collection("nftCollection").doc(String(currentNft.tokenId)).get()).data();
+            setCurrentNft(nftData);
+            toast.success("You have placed bid this auction successfully");
             setIsProcessing(false);
           })
-          .catch(() => {
-            toast.error("Failed to bid auction");
-            setIsProcessing(false);
-          });
       } catch (err) {
         toast.error("Failed to bid auction");
         setIsProcessing(false);
@@ -362,7 +366,7 @@ function Detail({ nft }: any) {
                       <button type="button" className={styles.offerBtn} >CONNECT WALLET</button>
                     ) :
                     (account ?
-                      (currentNft.owner && (account === currentNft.auctionCreator || account === currentNft.lastBidder) ?
+                      (currentNft.auctionCreator && (account === currentNft.auctionCreator || account === currentNft.lastBidder) ?
                         <button type="button" className={styles.offerBtn} onClick={endAuction}>END AUCTION</button>
                         :
                         <button type="button" className={styles.offerBtn} >AUCTION IS ENDED</button>

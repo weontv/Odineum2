@@ -224,7 +224,6 @@ function Mint(this: any) {
                           title: 'WOLVES',
                           level: level[i],
                           creator: account,
-                          royalty: 5.5,
                           image: assetImages[0]
                         };
                         break;
@@ -233,7 +232,6 @@ function Mint(this: any) {
                           title: 'CROWS',
                           level: level[i],
                           creator: account,
-                          royalty: 6,
                           image: assetImages[1]
                         };
                         break;
@@ -242,7 +240,6 @@ function Mint(this: any) {
                           title: 'ODINS STALLION',
                           level: level[i],
                           creator: account,
-                          royalty: 6.5,
                           image: assetImages[2]
                         };
                         break;
@@ -251,7 +248,6 @@ function Mint(this: any) {
                           title: 'ODIN',
                           level: level[i],
                           creator: account,
-                          royalty: 7,
                           image: assetImages[3]
                         };
                         break;
@@ -260,7 +256,6 @@ function Mint(this: any) {
                           title: 'ODINS FACE',
                           level: level[i],
                           creator: account,
-                          royalty: 8,
                           image: assetImages[4]
                         };
                         break;

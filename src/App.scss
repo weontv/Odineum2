@@ -68,7 +68,7 @@
 }
 
 .bg-logo {
-  background-color: #0c2603;
+  background-color: black;
   background-image: url(./assets/logo.png);
   background-position: center;
   background-repeat: no-repeat;
@@ -78,14 +78,14 @@
 .md-hide {
   display: none;
   @media (max-width: 754px) {
-    display: flex;    
+    display: flex;
   }
 }
 
 .md-show {
   display: flex;
   @media (max-width: 754px) {
-    display: none;    
+    display: none;
   }
 }
 
