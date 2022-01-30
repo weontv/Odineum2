@@ -313,7 +313,7 @@ function Mint(this: any) {
       return;
     }
     if (minPrice <= selectedNFT.price) {
-      toast.error("The price should be more than previous price");
+      toast.error("The price should be more than the last price");
       return;
     }
     if (active) {
@@ -341,7 +341,7 @@ function Mint(this: any) {
         );
         await approve.wait();
       }
-      console.log("before trade setting")
+
       if (isAuction) {
         console.log("auction")
         console.log(
@@ -366,7 +366,6 @@ function Mint(this: any) {
             const events = result?.events;
             if (events.length > 0) {
               const { args } = await events[events.length - 1];
-              console.log("Auction Info", parseInt(args.duration, 10), parseInt(args.auctionLength, 10));
               const ress = await firestore.collection("nftCollection").doc(String(selectedNFT.tokenId)).update({
                 price: parseFloat(minPrice.toString()),
                 isSale: true,
@@ -374,12 +373,12 @@ function Mint(this: any) {
                 paymentType,
                 auctionLength: durationsTime[duration],
                 auctionCreator: account,
-                time:
-                  (parseInt(args.duration, 10) + parseInt(args.auctionStart, 10)) *
-                  1000,
+                time: (parseInt(args.duration, 10) + parseInt(args.auctionStart, 10)) * 1000,
               });
             }
             setShowModal(false);
+            toast.success('Successfully created!');
+            await getMyNFTs();
           })
           .catch((err: any) => {
             setIsSaleProcessing(false);
@@ -417,7 +416,7 @@ function Mint(this: any) {
         } catch (err) {
           setIsSaleProcessing(false);
           toast.error("Creation failed.");
-          console.log("create and auction:", err);
+          console.log("Put on Sale:", err);
           setShowModal(false);
         }
       }

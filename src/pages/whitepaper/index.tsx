@@ -17,7 +17,7 @@ function WhitePaper() {
 
   return (
     <div className='whitepaper-bg'>
-      <div className='whitepaper-size'>
+      <div className='whitepaper-size md-show'>
         {clicked && <div className='click' onClick={() => {
           setClicked(false);
         }}>
@@ -25,7 +25,7 @@ function WhitePaper() {
           <p>Click here</p>
         </div>}
         <HTMLFlipBook
-          className='m-auto border-white-500'
+          className='md-show'
           startPage={0}
           size='stretch'
           width={680}
@@ -51,6 +51,48 @@ function WhitePaper() {
           ref={flipBook}
         >
           <div className='bg-logo' />
+          {pages.map((item: string, index: number) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <div key={`image-${index}`}>
+              <img className='w-full h-full' src={item} alt="" />
+            </div>
+          ))}
+          <div className='bg-logo' />
+        </HTMLFlipBook>
+      </div>
+      <div className='whitepaper-size md-hide'>
+        {clicked && <div className='click' onClick={() => {
+          setClicked(false);
+        }}>
+          <img src="img/triangle.png" alt="triangle" />
+          <p>Click here</p>
+        </div>}
+        <HTMLFlipBook
+          className='md-hide'
+          startPage={0}
+          size='stretch'
+          width={680}
+          height={950}
+          minWidth={375}
+          maxWidth={2480}
+          minHeight={667}
+          maxHeight={3508}
+          drawShadow={false}
+          flippingTime={1000}
+          usePortrait
+          startZIndex={0}
+          autoSize
+          maxShadowOpacity={1}
+          showCover
+          mobileScrollSupport
+          clickEventForward
+          useMouseEvents
+          swipeDistance={100}
+          showPageCorners
+          disableFlipByClick={false}
+          style={{ margin: 'auto auto' }}
+          ref={flipBook}
+        >
           {pages.map((item: string, index: number) => (
             // eslint-disable-next-line react/no-array-index-key
             <div key={`image-${index}`}>
