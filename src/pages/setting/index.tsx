@@ -97,7 +97,7 @@ function Setting(this: any) {
         setNickName(userInfo.nickName.substring(1));
         setBio(userInfo.bio);
       } else if (active) {
-        toast.info("Please set up your profile before you use the marketplace");
+        toast.info("Please fill your profile.");
       }
     }
   };

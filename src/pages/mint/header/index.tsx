@@ -117,8 +117,6 @@ function NftHeader() {
       ).data();
       if (userInfo) {
         setUser(userInfo);
-      } else if (active) {
-        toast.info("Please set up your profile before you use the marketplace");
       }
     }
   };

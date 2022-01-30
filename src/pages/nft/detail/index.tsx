@@ -92,6 +92,13 @@ function Detail({ nft }: any) {
         toast.error('You cannot buy your nft');
         return;
       }
+      if (account) {
+        const checkUser = (await firestore.collection('users').doc(account).get()).data();
+        if (!checkUser?.nickName) {
+          toast.warning('Please complete your profile first!');
+          return;
+        }
+      }
       const contract = new Contract(
         process.env.REACT_APP_MARKET_ADDRESS || '',
         Market_INFO.abi,
@@ -163,7 +170,7 @@ function Detail({ nft }: any) {
   const bidNft = async () => {
     if (account) {
       const checkUser = (await firestore.collection('users').doc(account).get()).data();
-      if (checkUser && !checkUser.nickName) {
+      if (!checkUser?.nickName) {
         toast.warning('Please complete your profile first!');
         return;
       }
@@ -310,7 +317,7 @@ function Detail({ nft }: any) {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} id='detail'>
       {currentNft ?
         <>
           <div className={styles.nft}>

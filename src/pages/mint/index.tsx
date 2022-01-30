@@ -170,136 +170,135 @@ function Mint(this: any) {
   }, [active]);
 
   const mintNFTs = async () => {
-    try {
-      setIsMintProcessing(true);
-      if (!user?.nickName) {
-        toast.info("Please set up your profile before you use the marketplace");
-        return;
+    if (active) {
+      if (account) {
+        const checkUser = (await firestore.collection('users').doc(account).get()).data();
+        if (!checkUser?.nickName) {
+          toast.warning('Please complete your profile first!');
+          return;
+        }
       }
-      if (active) {
-        const contract = new Contract(
-          process.env.REACT_APP_MARKET_ADDRESS || '',
-          Market_INFO.abi,
-          library.getSigner(),
-        );
-        const nftContract = new Contract(
-          process.env.REACT_APP_NFT_ADDRESS || '',
-          NFT_INFO.abi,
-          library.getSigner(),
-        );
+      const contract = new Contract(
+        process.env.REACT_APP_MARKET_ADDRESS || '',
+        Market_INFO.abi,
+        library.getSigner(),
+      );
+      const nftContract = new Contract(
+        process.env.REACT_APP_NFT_ADDRESS || '',
+        NFT_INFO.abi,
+        library.getSigner(),
+      );
 
-        // check if the wallet is approved to contract
-        const isApproved = await nftContract.isApprovedForAll(
-          account,
+      // check if the wallet is approved to contract
+      const isApproved = await nftContract.isApprovedForAll(
+        account,
+        process.env.REACT_APP_MARKET_ADDRESS,
+      );
+      if (!isApproved) {
+        const approve = await nftContract.setApprovalForAll(
           process.env.REACT_APP_MARKET_ADDRESS,
+          true,
         );
-        if (!isApproved) {
-          const approve = await nftContract.setApprovalForAll(
-            process.env.REACT_APP_MARKET_ADDRESS,
-            true,
-          );
-          await approve.wait();
-        }
+        await approve.wait();
+      }
 
-        const order = (await firestore.collection("nftOrder").doc("nftOrder").get()).data();
-        if (order) {
-          await getTotalSupply();
-          const level = order.randomOrder.splice(Number(totalSupply + 1), number);
-          try {
-            const res = await contract.mint(number, level);
-            res
-              .wait()
-              .then(async (result: any) => {
-                const events = result?.events;
-                setIsMintProcessing(false);
-                if (events.length > 0) {
-                  toast.success('Successfully minted.');
-                  console.log("number", number);
-                  for (let i = 0; i < number; i += 1) {
-                    console.log(totalSupply + i);
-                    let JSONBody;
-                    switch (level[i]) {
-                      case 1:
-                        JSONBody = {
-                          title: 'WOLVES',
-                          level: level[i],
-                          creator: account,
-                          image: assetImages[0]
-                        };
-                        break;
-                      case 2:
-                        JSONBody = {
-                          title: 'CROWS',
-                          level: level[i],
-                          creator: account,
-                          image: assetImages[1]
-                        };
-                        break;
-                      case 3:
-                        JSONBody = {
-                          title: 'ODINS STALLION',
-                          level: level[i],
-                          creator: account,
-                          image: assetImages[2]
-                        };
-                        break;
-                      case 4:
-                        JSONBody = {
-                          title: 'ODIN',
-                          level: level[i],
-                          creator: account,
-                          image: assetImages[3]
-                        };
-                        break;
-                      case 5:
-                        JSONBody = {
-                          title: 'ODINS FACE',
-                          level: level[i],
-                          creator: account,
-                          image: assetImages[4]
-                        };
-                        break;
+      const order = (await firestore.collection("nftOrder").doc("nftOrder").get()).data();
+      if (order) {
+        await getTotalSupply();
+        const level = order.randomOrder.splice(Number(totalSupply + 1), number);
+        try {
+          setIsMintProcessing(true);
+          const res = await contract.mint(number, level);
+          res
+            .wait()
+            .then(async (result: any) => {
+              const events = result?.events;
+              setIsMintProcessing(false);
+              if (events.length > 0) {
+                toast.success('Successfully minted.');
+                console.log("number", number);
+                for (let i = 0; i < number; i += 1) {
+                  console.log(totalSupply + i);
+                  let JSONBody;
+                  switch (level[i]) {
+                    case 1:
+                      JSONBody = {
+                        title: 'WOLVES',
+                        level: level[i],
+                        creator: account,
+                        image: assetImages[0]
+                      };
+                      break;
+                    case 2:
+                      JSONBody = {
+                        title: 'CROWS',
+                        level: level[i],
+                        creator: account,
+                        image: assetImages[1]
+                      };
+                      break;
+                    case 3:
+                      JSONBody = {
+                        title: 'ODINS STALLION',
+                        level: level[i],
+                        creator: account,
+                        image: assetImages[2]
+                      };
+                      break;
+                    case 4:
+                      JSONBody = {
+                        title: 'ODIN',
+                        level: level[i],
+                        creator: account,
+                        image: assetImages[3]
+                      };
+                      break;
+                    case 5:
+                      JSONBody = {
+                        title: 'ODINS FACE',
+                        level: level[i],
+                        creator: account,
+                        image: assetImages[4]
+                      };
+                      break;
 
-                      default:
-                        break;
-                    }
-
-                    const pinataData = await mintUsingPinata(JSONBody);
-                    console.log(JSONBody);
-                    if (pinataData.success) {
-                      const response = await firestore.collection("nftCollection").doc(String(parseInt(events[i * 2 + 1].args.nftID, 10))).set({
-                        tokenId: parseInt(events[i * 2 + 1].args.nftID, 10),
-                        tokenURI: pinataData.message,
-                        ...JSONBody,
-                        ownerAvatar:
-                          user?.avatarImage || "img/nft_2.png",
-                        owner: account,
-                        price: 0,
-                        saleType: "auction",
-                        paymentType: 'BNB',
-                        auctionLength: 0,
-                        auctionCreator: account,
-                        time: 0,
-                        created: moment().valueOf(),
-                        isSale: false,
-                      });
-                    }
+                    default:
+                      break;
                   }
-                  await getTotalSupply();
-                  await getMyNFTs();
-                }
-              })
 
-          } catch (error) {
-            console.log('mint err----', error);
-            setIsMintProcessing(false);
-          }
+                  const pinataData = await mintUsingPinata(JSONBody);
+                  console.log(JSONBody);
+                  if (pinataData.success) {
+                    const response = await firestore.collection("nftCollection").doc(String(parseInt(events[i * 2 + 1].args.nftID, 10))).set({
+                      tokenId: parseInt(events[i * 2 + 1].args.nftID, 10),
+                      tokenURI: pinataData.message,
+                      ...JSONBody,
+                      ownerAvatar:
+                        user?.avatarImage || "img/nft_2.png",
+                      owner: account,
+                      price: 0,
+                      saleType: "auction",
+                      paymentType: 'BNB',
+                      auctionLength: 0,
+                      auctionCreator: account,
+                      time: 0,
+                      created: moment().valueOf(),
+                      isSale: false,
+                    });
+                  }
+                }
+                await getTotalSupply();
+                await getMyNFTs();
+              }
+            })
+        } catch (error) {
+          console.log('mint err----', error);
+          setIsMintProcessing(false);
         }
       }
-    } catch (err) {
-      console.log(err);
     }
   }
+
 
   const createTrade = async () => {
     if (!user?.nickName) {
