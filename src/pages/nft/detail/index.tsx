@@ -40,8 +40,10 @@ function Detail({ nft }: any) {
   }
 
   const getCurrentNft = async () => {
-    const res = (await firestore.collection("nftCollection").doc(nft.id).get()).data();
-    setCurrentNft(res);
+    if (nft) {
+      const res = (await firestore.collection("nftCollection").doc(nft.id).get()).data();
+      setCurrentNft(res);
+    }
   }
 
   const getMyNFTs = async () => {
@@ -122,21 +124,17 @@ function Detail({ nft }: any) {
             .wait()
             .then(async () => {
               toast.success('You buy the NFT successfully');
-              const ress = await firestore.collection("nftCollection").where('tokenId', '==', currentNft.tokenId).get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                  const data = doc.data().update({
-                    owner: account,
-                    isSale: false
-                  });
-                });
+              const ress = await firestore.collection("nftCollection").doc(String(currentNft.tokenId)).update({
+                owner: account,
+                isSale: false
               });
-              getCurrentNft();
-            })
-            .catch(() => {
-              toast.error('Buying failed');
+              console.log(ress);
+              const nftData = await (await firestore.collection("nftCollection").doc(String(currentNft.tokenId)).get()).data();
+              setCurrentNft(nftData);
             })
         } catch (err: any) {
           toast.error('Buying failed');
+          console.log(err);
         }
       } else {
         const tokenContract = new Contract(
