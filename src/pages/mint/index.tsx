@@ -562,7 +562,6 @@ function Mint(this: any) {
                       />
                     </div>
                   </div>}
-
                 <button
                   type="button"
                   className="bg-btn-main size-auto w-full text-2md py-4 text-white"

@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IWBNB",
-  "sourceName": "contracts/BCNFTMarketplace..sol",
+  "sourceName": "contracts/BCNFTMarketplace.sol",
   "abi": [
     {
       "inputs": [],
